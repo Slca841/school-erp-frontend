@@ -1,0 +1,213 @@
+/* ================================
+   🌟 ACCOUNT HOME - CLEAN UI
+   ================================= */
+
+.account-page {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;   /* CENTER MAIN CONTENT */
+  align-items: center;
+  padding: 40px 20px;
+  gap: 50px;
+  min-height: calc(100vh - 80px);
+  /* background: var(--bg-card); */
+  font-family: "Poppins", sans-serif;
+}
+
+/* ================================
+   🟦 STAT CARDS
+   ================================ */
+.stats-section {
+  width:60%;
+display: flex;
+flex-wrap: wrap;
+  justify-content: center;     
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 10px 60px;
+  width: 300px;
+  height: 150px;
+  border-radius: 14px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  color: #fff;
+  text-align: center;
+  background-size: 130%;
+  background-position: center;
+  font-family: "Poppins", sans-serif;
+}
+
+/* No Hover */
+.stat-card:hover {
+  transform: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.stat-card h3 {
+  color: rgb(36, 34, 34);
+  font-size: 23px;       /* Bigger Clean Text */
+  font-weight: 600;
+}
+.card-icon {
+  font-size: 32px;       /* Bigger Icons */
+  margin-bottom: 12px;
+}
+.ndisplay{
+  display: flex;
+  justify-content: flex-start;
+  gap: 18px;
+}
+.ndisplay p {
+  padding: 10px;
+  font-size: 28px;       /* Bigger Number */
+  font-weight: 700;
+}
+
+/* ================================
+   🟧 WIDGET SECTION
+   ================================ */
+.widgets-section {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ margin-top: 10px;
+  gap: 25px;
+}
+
+.widget {
+  padding: 24px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+}
+
+/* No Hover */
+.widget:hover {
+  transform: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+}
+
+/* ================================
+   👩‍🎓 GENDER RATIO
+   ================================ */
+   .gender-box{
+    width: 350px;
+   }
+.gender-box h2 {
+  color: #2563eb;
+  font-size: 22px;       /* Bigger Heading */
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.gender-stats {
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 10px;
+  color: black;
+  text-align: center;
+}
+
+/* ================================
+   🎂 BIRTHDAY LIST
+   ================================ */
+   .birthday-box{
+    width: 350px;
+   }
+.birthday-box h2 {
+  color: #db2777;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.birthday-list li {
+  padding: 10px 14px;
+  background: #fff4f8;
+  border-left: 4px solid #db2777;
+  border-radius: 10px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  font-size: 16px;       /* Larger */
+  font-weight: 600;
+}
+.no-birthday{
+  color: black;
+}
+.no-data{
+  color: black;
+}
+.cake-icon {
+  color: #fbbf24;
+  font-size: 22px;
+}
+
+/* ================================
+   🌀 LOADING
+   ================================ */
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 70vh;
+}
+
+.spinner {
+  width: 46px;
+  height: 46px;
+  border: 4px solid #ddd;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #444;
+}
+
+/* ================================
+   ❌ ERROR
+   ================================ */
+.error-text {
+  font-size: 20px;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* ================================
+   🎬 ANIMATION
+   ================================ */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ================================
+   📱 RESPONSIVE
+   ================================ */
+@media (max-width: 1024px) {
+  .account-page {
+    flex-direction: column;
+    align-items: center;   /* CENTER MOBILE */
+  }
+
+  .stats-section {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    justify-items: center;
+  }
+
+  .stat-card {
+    width: 90%;
+  }
+
+  .widgets-section {
+    width: 95%;
+  }
+}

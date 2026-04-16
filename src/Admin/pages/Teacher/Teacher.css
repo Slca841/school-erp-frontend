@@ -1,0 +1,328 @@
+/* =====================================
+   👨‍🏫 TEACHER PAGE (LIGHT + DARK THEME)
+   ===================================== */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  font-family: "Poppins", sans-serif;
+}
+
+.teacher-container {
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-main);
+  min-height: 100vh;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+/* ---------- Header ---------- */
+.teacher-header {
+  width: 70%;
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  width: 40%;
+  margin: 0 auto;
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/* ---------- Add Button ---------- */
+.add-btn {
+  padding: 8px 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+  background: #1e3a8a;
+  transform: scale(1.05);
+}
+
+/* ---------- Table ---------- */
+.teacher-table {
+  width: 90%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.teacher-table th,
+.teacher-table td {
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  text-align: center;
+  color: var(--text-color);
+  transition: background 0.3s ease;
+  font-size: 17px;
+}
+
+.teacher-table th {
+  background: var(--hover-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.teacher-table tr:hover {
+  background: var(--hover-bg);
+}
+
+/* ---------- Action Buttons ---------- */
+.view-btn,
+.deleteBtn {
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+  margin: 2px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.view-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.view-btn:hover {
+  background: #1e3a8a;
+}
+
+.deleteBtn {
+  background: #dc2626;
+  color: white;
+}
+
+.deleteBtn:hover {
+  background: #b91c1c;
+}
+
+/* ---------- Complaint Count ---------- */
+.complaint-count {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.complaint-count:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Complaint Modal ---------- */
+.complaints-list {
+  list-style: none;
+  padding: 0;
+}
+
+.complaint-item {
+  background: var(--bg-main);
+  margin: 6px 0;
+  padding: 5px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-color);
+  transition: background 0.3s ease;
+}
+
+.complaint-item:hover {
+  background: var(--hover-bg);
+}
+
+.status-badge {
+  height: 30px;
+  padding: 4px 8px;
+  margin-left: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.status-badge.resolved {
+  background: #22c55e;
+}
+
+.status-badge.pending {
+  background: #ef4444;
+}
+
+/* ---------- Modal Overlay ---------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+/* ======================================================
+   📌 FINAL EDIT + VIEW MODAL (MERGED & CLEAN)
+   ====================================================== */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 500px;
+  max-width: 90%;
+  max-height: 85vh;
+  background: var(--bg-card);
+  padding: 28px 32px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+  overflow-y: auto;
+  color: var(--text-color);
+  opacity: 0;
+  animation: modalFadeIn 0.4s ease forwards;
+}
+
+.modal h3 {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* ---------- READ FIELDS ---------- */
+.modal p {
+  background: #f8fafc;
+  color: black;
+  padding: 20px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  margin: 8px 0;
+  font-size: 17px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- EDIT INPUT FIELDS ---------- */
+.modal input {
+  width: 60%;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #555;
+  border-radius: 8px;
+  font-size: 16px;
+  color: black;
+}
+
+.modal input:focus {
+  border-color: var(--accent);
+}
+
+/* ---------- BUTTONS ---------- */
+.edit-btn,
+.save-btn,
+.close-btn {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.edit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.save-btn {
+  background: #00c853;
+  color: white;
+}
+
+.close-btn {
+  background: #444;
+  color: white;
+}
+.account-view-btn {
+  background: #6e8b92;
+  color: black;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.account-view-btn:hover {
+  background: #26545f;
+  color: white;
+}
+
+
+.account-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.account-table th,
+.account-table td {
+  border: 1px solid #555;
+  padding: 8px;
+  text-align: center;
+}
+
+/* ---------- Animations ---------- */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ---------- Scrollbar ---------- */
+.modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .modal {
+    width: 92%;
+    padding: 18px;
+  }
+}

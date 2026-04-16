@@ -1,0 +1,231 @@
+.admin-container {
+  padding: 40px;
+  text-align: center;
+}
+
+.admin-title {
+  font-size: 32px;
+  color: var(--text-color);
+  font-weight: bold;
+}
+
+.admin-subtitle {
+  font-size: 16px;
+  color: var(--text-color);
+  margin-bottom: 30px;
+}
+
+/* Grid layout */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* Card design */
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  border-left: 5px solid transparent;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  border-left: 5px solid #0077ff;
+}
+/* ===============================
+   ⚠️ ADMIN CARD DETAIL (WARNING)
+   =============================== */
+
+.admin-card-detail {
+  margin-top: 12px;
+  padding: 6px 16px;
+  
+}
+
+/* Description text */
+.admin-card-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9a3412;
+  margin-bottom: 10px;
+}
+
+/* List */
+.admin-delete-list {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  background: linear-gradient(135deg, #fff7ed, #fffbeb);
+  border: 1.5px solid #fed7aa;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* List items */
+.admin-delete-list li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #7c2d12;
+}
+
+/* Custom bullet icon */
+.admin-delete-list li::before {
+  content: "✖";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Button */
+.admin-btn {
+  margin-top: 15px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background-color: #7f8586;
+  width: 100%;
+  transition: 0.2s;
+}
+
+.btn-red {
+  background-color: #e63946;
+}
+
+.btn-blue {
+  background-color: #1d3557;
+}
+
+.admin-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* ===============================
+   📦 QR IMAGE UPLOAD STYLING
+   =============================== */
+
+.qr-upload-box {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qr-upload-label {
+  padding: 10px 14px;
+  border: 2px dashed #c7d2fe;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #3730a3;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.qr-upload-label:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+}
+
+.qr-file-name {
+  font-size: 13px;
+  color: #475569;
+  padding-left: 6px;
+  word-break: break-all;
+}
+
+.profileimg{
+  margin-bottom: 30px;
+  width: 400px;
+  
+}
+/* ===============================
+   ⚠️ CONFIRMATION MODAL
+   =============================== */
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-modal {
+  background: #ffffff;
+  padding: 22px;
+  width: 420px;
+  max-width: 90%;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  animation: scaleIn 0.25s ease;
+}
+
+.confirm-modal h2 {
+  margin-bottom: 10px;
+  color: #b91c1c;
+}
+
+.confirm-warning {
+  font-size: 14px;
+  color: #7c2d12;
+  margin-bottom: 12px;
+}
+
+.confirm-instruction {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.confirm-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #fecaca;
+  outline: none;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.confirm-input:focus {
+  border-color: #dc2626;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

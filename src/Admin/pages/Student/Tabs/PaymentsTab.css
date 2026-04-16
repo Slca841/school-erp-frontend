@@ -1,0 +1,286 @@
+/* 🌐 Layout */
+.payment-layout {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  padding: 25px;
+  background: linear-gradient(135deg, #4f5b62, #374151);
+  border-radius: 20px;
+  min-height: 90vh;
+  color: #111827;
+}
+
+.payment-section {
+  width: 70%;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+
+.other-fee-section {
+  width: 30%;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+}
+
+/* ---------- Header ---------- */
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.payment-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- Buttons ---------- */
+.btn-add-fee {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-add-fee:hover {
+  background: #1e40af;
+  transform: scale(1.05);
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-delete:hover {
+  background: #b91c1c;
+  transform: scale(1.1);
+}
+
+.btn-download {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 12px 0;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+.btn-download:hover {
+  background: #047857;
+  transform: scale(1.02);
+}
+
+.btn-primary, .btn-success {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.btn-primary { background: #2563eb; }
+.btn-success { background: #10b981; }
+.btn-primary:hover, .btn-success:hover { opacity: 0.9; }
+
+/* ---------- Payment Table ---------- */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.payment-table thead {
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 16px;
+}
+
+.payment-table th,
+.payment-table td {
+  padding: 14px 12px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 16px;
+  color: #1f2937;
+}
+
+.payment-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.payment-table tr:hover {
+  background: #e0f2fe;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.payment-table td:first-child {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.payment-table td:last-child {
+  font-weight: 600;
+  color: #059669;
+}
+
+/* ---------- Summary Box ---------- */
+.summary-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 15px;
+  background: #f9fafb;
+  padding: 18px 20px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.04);
+  margin-top: 15px;
+  transition: 0.3s ease;
+}
+.summary-box:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.summary-box div {
+  flex: 1;
+}
+
+.summary-box p {
+  margin: 6px 0;
+  font-size: 18px;
+  color: #1f2937;
+}
+.summary-box p strong {
+  color: #1e3a8a;
+}
+
+.summary-box hr {
+  margin: 10px 0;
+  border: none;
+  border-top: 1px dashed #9ca3af;
+}
+
+/* ---------- Other Fee Fields ---------- */
+.other-fee-fields {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.fee-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fee-field label {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.fee-value {
+  background: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  min-width: 80px;
+  text-align: right;
+}
+
+.fee-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: 0.3s ease;
+}
+.fee-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* ---------- Modal ---------- */
+.overlay {
+  
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+}
+
+.modal-box {
+  width: 420px;
+  max-width: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  z-index: 1000;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-box h3 {
+  text-align: center;
+  color: #1e40af;
+  margin-bottom: 20px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Animation ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -45%) scale(0.9); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .payment-layout {
+    flex-direction: column;
+    background: #475569;
+  }
+  .payment-section,
+  .other-fee-section {
+    width: 100%;
+  }
+  .summary-box {
+    flex-direction: column;
+  }
+}

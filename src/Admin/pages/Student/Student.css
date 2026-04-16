@@ -1,0 +1,294 @@
+/* =====================================
+   🎓 STUDENTS PAGE (LIGHT + DARK THEME)
+   ===================================== */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  font-family: "Poppins", sans-serif;
+}
+.students-container {
+  width: 90%;
+  margin: 0 auto;
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+/* ---------- Title ---------- */
+.students-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--text-color);
+  text-align: center;
+}
+
+/* ---------- Filters ---------- */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.student-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+.student-tabs button{
+padding: 10px;
+border-radius: 15px;
+border: none;
+font-weight: 500;
+background-color: #867f7f;
+color: white;
+cursor: pointer;
+}
+.student-tabs button:hover{
+  background-color: #2563eb;
+  color: white;
+}
+.student-tabs button.active {
+background-color: #2563eb;
+color: white;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: #f1f3f6;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab-btn:hover {
+  background: #e3e7ee;
+}
+
+.tab-btn.active {
+  background: #2563eb;
+  color: white;
+  border-color: #1e40af;
+}
+
+.tab-btn.danger.active {
+  background: #dc2626;
+  border-color: #991b1b;
+}
+
+.delete-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+.view-btn {
+  padding: 6px 10px;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.search-input,
+.fee-input {
+  flex: 1;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  color: var(--text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus,
+.fee-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+  outline: none;
+}
+
+/* ---------- Class Filter Buttons ---------- */
+.class-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.class-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--bg-main);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.class-btn:hover {
+  background: var(--hover-bg);
+  color: var(--accent);
+}
+
+.class-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.count-text {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ---------- Table ---------- */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.students-table th,
+.students-table td {
+  font-size: 17px;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.students-table th {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  
+}
+
+.students-table tr:nth-child(even) {
+  background: var(--bg-main);
+}
+
+.students-table tr:hover {
+  background: var(--hover-bg);
+  transition: background 0.3s ease;
+}
+
+
+
+/* ---------- View Button ---------- */
+.view-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--accent);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.view-btn:hover {
+  background-color: #1e3a8a;
+  transform: scale(1.03);
+}
+
+/* ---------- Bulk Actions ---------- */
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+  transition: all 0.3s ease;
+}
+
+.bulk-actions button,
+.bulk-actions .action-select {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bulk-actions button {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+}
+
+.bulk-actions button:hover {
+  background: #1e3a8a;
+}
+
+.bulk-actions .action-select {
+  border: 1px solid var(--border-color);
+  background: var(--bg-main);
+  color: var(--text-color);
+  min-width: 180px;
+}
+
+/* Apply button variant (green) */
+.apply-btn {
+  background: #16a34a !important;
+}
+
+.apply-btn:hover {
+  background: #15803d !important;
+}
+.no-data {
+  text-align: center;
+  color: var(--text-color);
+  opacity: 0.7;
+  padding: 12px;
+  font-style: italic;
+}
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .students-container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .search-input,
+  .fee-input {
+    width: 100%;
+  }
+}

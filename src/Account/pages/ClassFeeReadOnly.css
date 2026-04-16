@@ -1,0 +1,49 @@
+/* ClassFeeReadOnly.css */
+.account-fee-page {
+  width: 100%;
+  height: auto;
+  margin-bottom: 50px;
+  padding: 30px;
+  background: var(--bg-card);
+
+}
+.fee-container{
+ margin-top: 30px;
+}
+.fee-container h2{
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: var(--text-color);
+}
+
+.fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.fee-table th {
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  font-size: 17px;
+}
+
+.fee-table td {
+  padding: 20px;
+  color: black;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 17px;
+}
+
+.fee-table tr:hover {
+  background: #f1f5f9;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+}

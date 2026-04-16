@@ -1,0 +1,341 @@
+/* =====================================
+   🧾 ADMIN NOTICE PAGE (LIGHT + DARK THEME)
+   ===================================== */
+
+
+
+/* 🌙 Dark Mode */
+
+/* ---------- Base ---------- */
+body {
+  background: linear-gradient(135deg, var(--bg-main), #797b7e);
+  color: var(--text-color);
+  font-family: "Poppins", sans-serif;
+  transition: 0.3s ease-in-out;
+}
+
+.main-container {
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+.image-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.notice-container,
+.notice-list {
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-color);
+  text-shadow: 0 2px 4px var(--shadow);
+}
+
+/* ---------- Layout ---------- */
+.notice-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 600px;
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 920px) {
+  .notice-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* ---------- Form Container ---------- */
+.notice-container {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 26px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px var(--shadow);
+  border: 1px solid var(--border-color);
+  transition: 0.3s ease;
+}
+
+
+
+/* ---------- Titles ---------- */
+.notice-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: var(--accent-dark);
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Input Fields ---------- */
+.notice-input,
+.notice-select,
+.notice-textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  padding: 12px 14px;
+  font-size: 15px;
+  background: var(--bg-card);
+  color: var(--text-color);
+  margin-bottom: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease;
+}
+
+.notice-textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.notice-input:focus,
+.notice-select:focus,
+.notice-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  transform: scale(1.01);
+}
+
+/* ---------- Submit Button ---------- */
+.notice-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: var(--text-color);
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+  transition: all 0.25s ease;
+  margin-top: 34px;
+}
+
+
+/* ---------- Right Notice List ---------- */
+.notice-list {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 8px 24px var(--shadow);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  max-height: 82vh;
+  overflow-y: auto;
+}
+
+.notice-list h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  margin-bottom: 16px;
+}
+
+/* ---------- Notice Card ---------- */
+.notice-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.notice-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+/* Clickable notice image */
+.notice-image {
+  width: 100%;
+  margin-top: 10px;
+  cursor: zoom-in;
+  border-radius: 8px;
+}
+
+/* Overlay background */
+.image-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Large image */
+.image-preview-large {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Close button */
+.image-preview-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 26px;
+  color: white;
+  cursor: pointer;
+}
+
+/* 🆕 New Tag Animation */
+.notice-card.new::after {
+  content: "🆕 NEW";
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  background: var(--new-badge);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 8px;
+  animation: fadeNew 6s ease forwards;
+}
+/* ===============================
+   📷 IMAGE UPLOAD STYLING
+   =============================== */
+
+.image-upload-box {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.image-upload-label {
+  display: inline-block;
+  padding: 10px 14px;
+  border: 2px dashed #c7d2fe;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #3730a3;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.image-upload-label:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+}
+
+.image-file-name {
+  font-size: 13px;
+  color: #475569;
+  padding-left: 6px;
+}
+
+@keyframes fadeNew {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.notice-card h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.notice-card p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.notice-card small {
+  font-size: 12px;
+  opacity: 0.7;
+  text-align: right;
+  display: block;
+  color: var(--text-color);
+}
+
+/* ---------- Actions (Edit/Delete) ---------- */
+.notice-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.notice-actions button {
+  border: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notice-actions button:first-child {
+  background: var(--accent);
+  color: #fff;
+}
+
+.notice-actions button:first-child:hover {
+  background: var(--accent-dark);
+}
+
+.notice-actions button:last-child {
+  background: #dc2626;
+  color: #fff;
+}
+
+.notice-actions button:last-child:hover {
+  background: #b91c1c;
+}
+
+/* ---------- Scrollbar ---------- */
+.notice-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notice-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notice-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 8px;
+}

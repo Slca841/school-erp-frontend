@@ -1,0 +1,346 @@
+/* =====================================
+   📘 ASSIGN PAGE (LIGHT + DARK THEME)
+   ===================================== */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  font-family: "Poppins", sans-serif;
+}
+/* ---------- Main Container ---------- */
+.assign-container {
+  margin: 0 auto;
+  width: 90%;
+  padding: 20px;
+  background: var(--bg-main);
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  color: var(--text-color);
+}
+
+/* ---------- Tab Buttons ---------- */
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-buttons button {
+  padding: 10px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-card);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.tab-buttons button:hover {
+  background: var(--hover-bg);
+  color: var(--accent);
+}
+
+.tab-buttons .active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* ---------- Common Controls ---------- */
+.assign-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: center;
+}
+
+.custom-select,
+.amount-input {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  background: var(--bg-card);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.custom-select:hover,
+.amount-input:hover,
+.custom-select:focus,
+.amount-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);
+}
+
+/* ---------- Buttons ---------- */
+.editassign-btn {
+  background: linear-gradient(to right, #64748b, #22c55e);
+  color: #fff;
+  font-weight: 600;
+  margin-left: 10px;
+  padding: 5px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.editassign-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.assign-btn {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.assign-btn:hover {
+  background: #1e3a8a;
+}
+
+/* ---------- Tables ---------- */
+.assigned-table {
+  margin-top: 20px;
+  background: var(--bg-card);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.assigned-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.assigned-table th,
+.assigned-table td {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  color: var(--text-color);
+}
+
+.assigned-table th {
+  background: var(--hover-bg);
+  font-weight: 600;
+}
+
+/* ---------- Subject Assign Section ---------- */
+.subject-assign-container {
+  display: flex;
+  gap: 20px;
+  height: calc(100vh - 180px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🔹 Left Fixed Class List */
+.class-list {
+  position: fixed;
+  left: 5%;
+  top: 160px;
+  width: 180px;
+  height: 75vh;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  scrollbar-width: thin;
+  z-index: 10;
+}
+
+.class-item {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 6px;
+  transition: all 0.25s ease-in-out;
+}
+
+.class-item:hover {
+  background: var(--hover-bg);
+  color: var(--accent);
+}
+
+.active-class {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* 🔹 Right Section */
+.subject-manage-section {
+  margin-left: 220px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 78vh;
+  background: var(--bg-card);
+  padding: 15px 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  scrollbar-width: thin;
+  border: 1px solid var(--border-color);
+}
+
+.subject-manage-section::-webkit-scrollbar {
+  width: 6px;
+}
+.subject-manage-section::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+/* ---------- Subject Table ---------- */
+.subject-table {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+}
+
+.subject-table th,
+.subject-table td {
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.subject-table th {
+  background-color: var(--hover-bg);
+  font-weight: 600;
+}
+
+.subject-table input,
+.subject-table select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-main);
+  color: var(--text-color);
+  transition: 0.3s ease;
+}
+
+.subject-table input:focus,
+.subject-table select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 4px rgba(37, 99, 235, 0.3);
+  outline: none;
+}
+
+.subject-table span {
+  display: inline-block;
+  padding: 6px 10px;
+  color: var(--text-color);
+}
+
+/* ---------- Info Note ---------- */
+.note {
+  color: var(--text-color);
+  opacity: 0.7;
+  font-style: italic;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* ---------- Button Row ---------- */
+.btn-row {
+  display: flex;
+  justify-content: right;
+}
+
+.save-btn {
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  background-color: #15803d;
+}
+
+.delete-btn {
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #dc2626;
+}
+.delete-btn:hover {
+  transform: scale(1.1);
+}
+
+/* ---------- Small Add Button ---------- */
+.small-add-btn {
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.small-add-btn:hover {
+  background: #1e3a8a;
+  transform: scale(1.05);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .subject-assign-container {
+    flex-direction: column;
+  }
+
+  .class-list {
+    position: relative;
+    width: 100%;
+    top: auto;
+    left: auto;
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  .subject-manage-section {
+    margin-left: 0;
+    max-height: none;
+  }
+
+  .assign-container {
+    width: 95%;
+    padding: 15px;
+  }
+}

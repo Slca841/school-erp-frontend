@@ -1,0 +1,456 @@
+
+/* =====================================
+   🌗 THEME VARIABLES (GLOBAL)
+   ===================================== */
+
+
+/* Smooth Transitions Between Themes */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  font-family: "Poppins", sans-serif;
+}
+
+/* =====================================
+   🧊 NEO DASHBOARD (LIGHT + DARK)
+   ===================================== */
+   .topHead{
+    width: 100%;
+    position: absolute;
+    margin-bottom: 20px;
+    top: 0;
+   }
+.dashboard-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  padding: 0px 0px;
+  overflow-x: hidden;
+}
+/* ---------- Layout ---------- */
+.dashboard-main {
+  position: relative;
+  margin: 0px 50px;
+  margin-top: 50px;
+  display: flex;
+
+}
+
+.left-container {
+  flex: 2;
+  
+}
+
+.right-container {
+  margin-left: 30px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.widgets-grid{
+  display: flex;
+}
+.event-calender{
+  margin-left: 50px;
+  width: 50%;
+  background-color: grey;
+height: 370px;
+max-height: 370px;
+border-radius: 10px;
+overflow: hidden;
+}
+/* ---------- Cards ---------- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-bottom: 40px;
+}
+
+.card {
+  width: 200px;
+  height: 130px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  transition: background 0.3s ease, transform 0.2s ease, border 0.3s ease;
+}
+/* Birthday Header */
+.birthday-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zoom-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #444;
+}
+
+/* Modal Overlay */
+.birthday-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box */
+.birthday-modal {
+  background: #fff;
+  width: 90%;
+  max-width: 700px;
+  max-height: 80%;
+  overflow-y: auto;
+  overflow-y: scroll;
+  border-radius: 16px;
+  padding: 20px;
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.birthday-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-icon {
+  cursor: pointer;
+  font-size: 20px;
+  color: #e74c3c;
+}
+
+/* Bigger list */
+.birthday-list.big li {
+  font-size: 16px;
+  margin: 20px 0px;
+  padding: 20px 0;
+}
+
+.card-icon {
+  margin-top: 10px;
+  display: flex; 
+  font-size: 28px;
+  color: rgb(199, 199, 198);
+  margin-bottom: 5px;
+}
+
+.card h3 {
+  padding: 3px 10px;
+  margin-top: 0;
+  /* font-size: 17px; */
+  /* font-weight: 500; */
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.card-icon p {
+ padding: 1px 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+/* ---------- Attendance Widget ---------- */
+.attendance-widget {
+  width: 40%;
+  height: auto;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.attendance-widget:hover {
+  border-color: var(--accent);
+}
+
+.attendance-widget h2 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 15px;
+}
+
+.attendance-widget p {
+color: black;
+  text-align: center;
+  margin: 6px 0;
+  font-weight: 500;
+}
+
+.attendance-widget select {
+  display: block;
+  margin: 15px auto;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  width: 80%;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+.attendance-widget select:hover {
+  background: var(--hover-bg);
+  border-color: var(--accent);
+}
+
+/* ---------- Class Summary ---------- */
+.class-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  margin-top: 15px;
+  color: var(--accent);
+}
+
+.class-summary h3 {
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.event-calender-view{
+  height: 90%;
+
+background-color: white;
+margin: 20px;
+border-radius: 10px;
+}
+.event-calender-view h2{
+  padding-top: 20px;
+  text-align: center;
+  color: black;
+}
+
+.event-content {
+  height: 70%;
+  margin-top: 20PX;
+  background-size: cover;
+  background-image: url('../../../assets/g-9.jpg');
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.event-content button{
+  background-color: rgba(201, 164, 43, 0.829);
+  width: 200px;
+  font-size: 17px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 7px;
+  transition: 0.1s;
+}
+.event-content button:hover{
+   font-size: 19px;
+  padding: 8px;
+  background-color: #fbbd04ce;
+}
+/* ---------- Gender Widget ---------- */
+.gender-widget {
+  height: 350px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 25px;
+  text-align: center;
+  color: var(--text-color);
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gender-widget h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ---------- Birthday Widget ---------- */
+.birthday-widget {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 22px;
+  height: 170px;
+  overflow-y: scroll;
+}
+
+.birthday-widget::-webkit-scrollbar {
+  width: 6px;
+}
+
+.birthday-widget::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.birthday-widget h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.birthday-widget li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-weight: 500;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cake-icon {
+  color: #fbbc04;
+}
+
+/* ---------- Spinner / Loading ---------- */
+.center-screen {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: var(--text-color);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 18px;
+  font-weight: 600;
+}
+.birthday-widget {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.birthday-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.birthday-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: #e5e7eb;
+  color: #333;
+}
+
+.birthday-tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.birthday-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.birthday-list li {
+  background: #fff;
+  color: black;
+  margin: 6px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.birthday-list p{
+  color: black;
+}
+.cake-icon {
+  color: #ff8a00;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    flex-direction: column;
+  }
+
+  .dashboard-container {
+    padding: 20px;
+  }
+}

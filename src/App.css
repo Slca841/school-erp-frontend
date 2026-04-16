@@ -1,0 +1,11 @@
+html, body {
+  pointer-events: auto !important;
+}
+
+.electron-overlay-fix {
+  pointer-events: none !important;
+}
+
+.electron-overlay-fix * {
+  pointer-events: auto !important;
+}

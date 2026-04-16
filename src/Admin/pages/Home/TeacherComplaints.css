@@ -1,0 +1,187 @@
+/* =====================================
+   🧾 COMPLAINTS PAGE (LIGHT + DARK THEME)
+   ===================================== */
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  font-family: "Poppins", sans-serif;
+}
+
+/* ---------- Container ---------- */
+.complaints-container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  transition: 0.3s ease;
+}
+
+.complaints-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.complaints-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+/* ---------- Refresh Button ---------- */
+
+
+.refresh-btn:hover {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  transform: translateY(-2px);
+}
+
+/* ---------- Tabs ---------- */
+.tabs {
+  width: 80%;  
+  margin: 0 auto;
+  display: flex;
+  text-align: center;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.tab-btn {
+  flex: 2;
+  background: #e2e8f0;
+  border: none;
+  padding: 12px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 3;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.tab-btn * {
+  pointer-events: none; /* ensures click registers even on text */
+}
+
+.tab-btn.active {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  cursor: pointer;
+}
+
+/* ---------- Table ---------- */
+.table-wrapper {
+  overflow-x: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.complaints-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.complaints-table th,
+.complaints-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+.complaints-table th{
+  color: black;
+}
+.complaints-table th {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+.complaints-table tr:hover td {
+  background: var(--hover-bg);
+}
+
+/* ---------- Complaint Text ---------- */
+.complaint-text {
+  padding: 10px;
+  text-align: left;
+  max-width: 350px;
+  word-wrap: break-word;
+}
+
+/* ---------- Status Badges ---------- */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.status-badge.resolved {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+/* ---------- Buttons ---------- */
+.status-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.resolve-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.pending-btn {
+  background: #e11d48;
+  color: white;
+}
+
+.status-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* ---------- No Data ---------- */
+.no-data {
+  text-align: center;
+  font-weight: 600;
+  color: #6b7280;
+  margin-top: 40px;
+  font-style: italic;
+}
+
+/* ---------- Loading ---------- */
+.loading-text {
+  color: var(--accent);
+  font-weight: 600;
+  text-align: center;
+  padding: 15px 0;
+}
