@@ -10,85 +10,80 @@ import "./Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
-const [showBirthdayZoom, setShowBirthdayZoom] = useState(false);
+
+  const [showBirthdayZoom, setShowBirthdayZoom] = useState(false);
   const [summary, setSummary] = useState(null);
- const [birthdays, setBirthdays] = useState({ students: [], teachers: [] });
-const [activeTab, setActiveTab] = useState("students");
+  const [birthdays, setBirthdays] = useState({ students: [], teachers: [] });
+  const [activeTab, setActiveTab] = useState("students");
   const [loading, setLoading] = useState(true);
   const [attendance, setAttendance] = useState(null);
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [classAttendance, setClassAttendance] = useState(null);
 
-  // 🔹 Fetch Overall Attendance (Admin)
-  const fetchAttendance = async () => {
-    try {
-      const res = await axios.get(`${API_URLS.ATTENDANCE}/admin/summary`);
-      if (res.data.success) setAttendance(res.data);
-    } catch (err) {
-      console.error("Error fetching attendance:", err.message);
-    }
-  };
+  // 🔥 FAST LOAD
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        setLoading(true);
 
-  // 🔹 Fetch All Classes
-  const fetchClasses = async () => {
-    try {
-      const res = await axios.get(`${API_URLS.ASSIGN}/class`);
-      if (res.data.success && Array.isArray(res.data.classes)) {
-        setClasses(res.data.classes); // full object store karo
-      } else {
-        console.warn("⚠️ No classes found or invalid format:", res.data);
+        // ✅ cache first
+        const cached = localStorage.getItem("dashboard");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          setSummary(parsed.summary);
+          setBirthdays(parsed.birthdays);
+          setAttendance(parsed.attendance);
+          setClasses(parsed.classes);
+          setLoading(false);
+        }
+
+        // ✅ parallel API
+        const [summaryRes, birthdayRes, attendanceRes, classRes] = await Promise.all([
+          axios.get(`${API_URLS.GET_STUDENTS}/fees/summary`),
+          axios.get(`${API_URLS.GET_STUDENTS}/birthdays/today`),
+          axios.get(`${API_URLS.ATTENDANCE}/admin/summary`),
+          axios.get(`${API_URLS.ASSIGN}/class`)
+        ]);
+
+        const finalData = {
+          summary: summaryRes.data,
+          birthdays: {
+            students: birthdayRes.data?.students || [],
+            teachers: birthdayRes.data?.teachers || []
+          },
+          attendance: attendanceRes.data.success ? attendanceRes.data : null,
+          classes: classRes.data.success ? classRes.data.classes : []
+        };
+
+        setSummary(finalData.summary);
+        setBirthdays(finalData.birthdays);
+        setAttendance(finalData.attendance);
+        setClasses(finalData.classes);
+
+        localStorage.setItem("dashboard", JSON.stringify(finalData));
+
+      } catch (err) {
+        console.error("Dashboard error:", err.message);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error fetching classes:", err.message);
-    }
-  };
+    };
 
-  // 🔹 Fetch Class-wise Attendance
+    loadDashboard();
+  }, []);
+
   const fetchClassAttendance = async (classId) => {
     if (!classId) return;
     try {
       const res = await axios.get(`${API_URLS.ATTENDANCE}/admin/class/${classId}/summary`);
       if (res.data.success) setClassAttendance(res.data);
-      else setClassAttendance(null);
     } catch (err) {
       console.error("Error fetching class attendance:", err.message);
     }
   };
 
-  // 🔹 Fetch Fee Summary
-  const fetchSummary = async () => {
-    try {
-      const res = await axios.get(`${API_URLS.GET_STUDENTS}/fees/summary`);
-      setSummary(res.data);
-    } catch (err) {
-      console.error("Error fetching summary:", err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-const fetchBirthdays = async () => {
-  try {
-    const res = await axios.get(`${API_URLS.GET_STUDENTS}/birthdays/today`);
-    const data = res.data || {};
-    setBirthdays({
-      students: data.students || [],
-      teachers: data.teachers || [],
-    });
-  } catch (err) {
-    console.error("❌ Error fetching birthdays:", err.message);
-  }
-};
-
-  useEffect(() => {
-    fetchSummary();
-    fetchBirthdays();
-    fetchAttendance();
-    fetchClasses();
-  }, []);
-
-  if (loading)
+  if (loading || !summary)
     return (
       <div className="center-screen">
         <div className="spinner"></div>
@@ -96,41 +91,40 @@ const fetchBirthdays = async () => {
       </div>
     );
 
-  if (!summary)
-    return (
-      <div className="center-screen error-text">❌ Failed to load summary</div>
-    );
-
   return (
     <div className="dashboard-container">
-      {/* <h1 className="dashboard-title">📊 Dashboard</h1> */}
-<div className="topHead">
-    <WaveHeader height={220} />
-</div>
+
+      <div className="topHead">
+        <WaveHeader height={220} />
+      </div>
+
       <div className="dashboard-main">
-        {/* LEFT SIDE */}
+
+        {/* LEFT */}
         <div className="left-container">
+
           <div className="cards-grid">
-            <div style={{cursor:"pointer"}} onClick={() => navigate("/admin/students")}>
-            <Card title="Total Students" value={summary.totalStudents} color="linear-gradient(to right,  #bf7fcfe8, #6368b0fb)" icon={<FaUsers />} />
-          </div>
-            <Card title="Total Fees" value={`${summary.totalFee}`} color="linear-gradient(to right, #b1a268e2, #546ec5cf)" icon={<FaRupeeSign />} />
-            <Card title="Paid" value={`${summary.totalPaid}`} color="linear-gradient(to right, #a272c696, #ac7073aa)" icon={<FaCheckCircle />} />
-            <Card title="Remaining" value={`${summary.totalRemaining}`} color="linear-gradient(to right, #5ba998ba, #aab074c5)" icon={<FaTimesCircle />} />
+            <div style={{ cursor: "pointer" }} onClick={() => navigate("/admin/students")}>
+              <Card title="Total Students" value={summary.totalStudents} color="linear-gradient(to right,  #bf7fcfe8, #6368b0fb)" icon={<FaUsers />} />
+            </div>
+
+            <Card title="Total Fees" value={summary.totalFee} color="linear-gradient(to right, #b1a268e2, #546ec5cf)" icon={<FaRupeeSign />} />
+            <Card title="Paid" value={summary.totalPaid} color="linear-gradient(to right, #a272c696, #ac7073aa)" icon={<FaCheckCircle />} />
+            <Card title="Remaining" value={summary.totalRemaining} color="linear-gradient(to right, #5ba998ba, #aab074c5)" icon={<FaTimesCircle />} />
           </div>
 
-          {/* Attendance Summary */}
           <div className="widgets-grid">
-           
+
+            {/* Attendance */}
             <div className="widget attendance-widget">
               <h2><FaClipboardCheck /> Attendance Summary</h2>
+
               {attendance ? (
                 <>
-                  <p>✅ Present: {attendance.present} / {attendance.totalStudents}</p>
-                  <p>❌ Absent: {attendance.absent} / {attendance.totalStudents}</p>
-<p>🟦 Leave: {attendance.leave} / {attendance.totalStudents}</p>
+                  <p>✅ Present: {attendance.present}</p>
+                  <p>❌ Absent: {attendance.absent}</p>
+                  <p>🟦 Leave: {attendance.leave}</p>
 
-                  {/* Dropdown for Class Selection */}
                   <select
                     value={selectedClass}
                     onChange={(e) => {
@@ -146,90 +140,98 @@ const fetchBirthdays = async () => {
                     ))}
                   </select>
 
-                  {/* Show Selected Class Attendance */}
-                  {classAttendance ? (
-                    classAttendance.totalStudents > 0 ? (
-                      <div className="class-summary">
-                        <h3>Class: {classAttendance.class}</h3>
-                        <p>✅ Present: {classAttendance.present} / {classAttendance.totalStudents}</p>
-                        <p>❌ Absent: {classAttendance.absent} / {classAttendance.totalStudents}</p>
-                    <p>🟦 Leave: {classAttendance.leave} / {classAttendance.totalStudents}</p>
-
-                      </div>
-                    ) : (
-                      <p className="no-data">⚠️ No attendance marked for this class today</p>
-                    )
-                  ) : (
-                    <p className="no-data">Select a class to view details</p>
-                  )}
+            {classAttendance ? (
+  classAttendance.present === 0 &&
+  classAttendance.absent === 0 &&
+  classAttendance.leave === 0 ? (
+    <p className="no-data">⚠️ No attendance marked for this class today</p>
+  ) : (
+    <div className="class-summary">
+      <h3>Class: {classAttendance.class}</h3>
+      <p>✅ Present: {classAttendance.present}</p>
+      <p>❌ Absent: {classAttendance.absent}</p>
+      <p>🟦 Leave: {classAttendance.leave}</p>
+    </div>
+  )
+) : (
+  <p className="no-data">Select a class to view details</p>
+)}
                 </>
               ) : (
                 <p>⚠️ Attendance data not available</p>
               )}
             </div>
-        <div className="event-calender">
-          <div className="event-calender-view">
-            <h2>📅 SLCA Event Calendar</h2>
-            <div  className="event-content">
-        <button style={{cursor:"pointer"}} onClick={() => navigate("/admin/eventCalendar")}>
-  View
-</button>
 
-               
+            {/* EVENT SECTION (RESTORED) */}
+            <div className="event-calender">
+              <div className="event-calender-view">
+                <h2>📅 SLCA Event Calendar</h2>
+                <div className="event-content">
+                  <button onClick={() => navigate("/admin/eventCalendar")}>
+                    View
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
 
-        </div>
           </div>
         </div>
 
-      {/* RIGHT SIDE */}
-<div className="right-container">
-  {/* Gender Ratio */}
-  <div className="widget gender-widget">
-    <h2>👩‍🎓 Gender Ratio</h2>
-    {summary.maleCount + summary.femaleCount > 0 ? (
-      <div className="chart">
-        <PieChart width={250} height={250}>
-          <Pie
-            data={[
-              { name: "Male", value: summary.maleCount },
-              { name: "Female", value: summary.femaleCount },
-            ]}
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            label
-          >
-            <Cell key="male" fill="#4A90E2" />
-            <Cell key="female" fill="#FF69B4" />
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
+        {/* RIGHT */}
+        <div className="right-container">
 
-        {(() => {
-          const total = summary.maleCount + summary.femaleCount;
-          const malePercent = total ? ((summary.maleCount / total) * 100).toFixed(1) : 0;
-          const femalePercent = total ? ((summary.femaleCount / total) * 100).toFixed(1) : 0;
-          return (
-            <p style={{color:"black",}}>
-              👦 Male: {malePercent}% | 👧 Female: {femalePercent}%
-            </p>
-          );
-        })()}
-      </div>
-    ) : (
-      <p style={{color:"black",}}>No gender data found</p>
-    )}
-  </div>
+          {/* Gender */}
+    <div className="widget gender-widget">
+  <h2>👩‍🎓 Gender Ratio</h2>
 
-  {/* Birthdays */}
- {/* 🎂 Birthday Widget */}
-<div className="widget birthday-widget">
-   <div className="birthday-header">
+  {summary.maleCount + summary.femaleCount > 0 ? (
+    <div className="chart">
+      <PieChart width={250} height={250}>
+        <Pie
+          data={[
+            { name: "Male", value: summary.maleCount },
+            { name: "Female", value: summary.femaleCount },
+          ]}
+          cx="50%"
+          cy="50%"
+          outerRadius={80}
+          dataKey="value"
+          label
+        >
+          <Cell fill="#4A90E2" />
+          <Cell fill="#FF69B4" />
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+
+      {/* 🔥 Percentage Display */}
+      {(() => {
+        const total = summary.maleCount + summary.femaleCount;
+
+        const malePercent = total
+          ? ((summary.maleCount / total) * 100).toFixed(1)
+          : 0;
+
+        const femalePercent = total
+          ? ((summary.femaleCount / total) * 100).toFixed(1)
+          : 0;
+
+        return (
+          <p style={{ color: "black", fontWeight: "600", marginTop: "10px" }}>
+            👦 Male: {malePercent}% | 👧 Female: {femalePercent}%
+          </p>
+        );
+      })()}
+    </div>
+  ) : (
+    <p style={{ color: "black" }}>No gender data found</p>
+  )}
+</div>
+
+          {/* Birthdays FULL */}
+      <div className="widget birthday-widget">
+  <div className="birthday-header">
     <h2><FaBirthdayCake /> Today's Birthdays</h2>
 
     <FaExpand
@@ -239,6 +241,7 @@ const fetchBirthdays = async () => {
     />
   </div>
 
+  {/* Tabs */}
   <div className="birthday-tabs">
     <button
       className={`birthday-tab ${activeTab === "students" ? "active" : ""}`}
@@ -246,6 +249,7 @@ const fetchBirthdays = async () => {
     >
       🎓 Students ({birthdays.students?.length || 0})
     </button>
+
     <button
       className={`birthday-tab ${activeTab === "teachers" ? "active" : ""}`}
       onClick={() => setActiveTab("teachers")}
@@ -254,79 +258,101 @@ const fetchBirthdays = async () => {
     </button>
   </div>
 
+  {/* SMALL VIEW */}
+  <div className="birthday-list">
+    {activeTab === "students" ? (
+      birthdays.students.length ? (
+        <ul>
+          {birthdays.students.map((b, i) => (
+            <li key={i}>
+              🎂 {b.fullName} (Class {b.studentclass})
+            </li>
+          ))}
+        </ul>
+      ) : <p>No student birthdays 🎉</p>
+    ) : birthdays.teachers.length ? (
+      <ul>
+        {birthdays.teachers.map((t, i) => (
+          <li key={i}>
+            🎂 {t.fullName} ({t.qualification})
+          </li>
+        ))}
+      </ul>
+    ) : <p>No teacher birthdays 🎉</p>}
+  </div>
+
+  {/* 🔥 MODAL (FULL VIEW SAME STYLE) */}
   {showBirthdayZoom && (
-  <div className="birthday-modal-overlay">
-    <div className="birthday-modal">
-      <div className="birthday-modal-header">
-        <h2><FaBirthdayCake /> Today's Birthdays</h2>
-        <FaTimes
-          className="close-icon"
-          onClick={() => setShowBirthdayZoom(false)}
-        />
-      </div>
+    <div className="birthday-modal-overlay">
+      <div className="birthday-modal">
+        <div className="birthday-modal-header">
+          <h2><FaBirthdayCake /> Today's Birthdays</h2>
 
-      {/* Tabs */}
-      <div className="birthday-tabs">
-        <button
-          className={`birthday-tab ${activeTab === "students" ? "active" : ""}`}
-          onClick={() => setActiveTab("students")}
-        >
-          🎓 Students ({birthdays.students.length})
-        </button>
-        <button
-          className={`birthday-tab ${activeTab === "teachers" ? "active" : ""}`}
-          onClick={() => setActiveTab("teachers")}
-        >
-          👨‍🏫 Teachers ({birthdays.teachers.length})
-        </button>
-      </div>
+          <FaTimes
+            className="close-icon"
+            onClick={() => setShowBirthdayZoom(false)}
+          />
+        </div>
 
-      {/* List */}
-      <div className="birthday-list big">
-        {activeTab === "students" ? (
-          birthdays.students.length ? (
+        {/* Tabs */}
+        <div className="birthday-tabs">
+          <button
+            className={`birthday-tab ${activeTab === "students" ? "active" : ""}`}
+            onClick={() => setActiveTab("students")}
+          >
+            🎓 Students ({birthdays.students.length})
+          </button>
+
+          <button
+            className={`birthday-tab ${activeTab === "teachers" ? "active" : ""}`}
+            onClick={() => setActiveTab("teachers")}
+          >
+            👨‍🏫 Teachers ({birthdays.teachers.length})
+          </button>
+        </div>
+
+        {/* BIG LIST */}
+        <div className="birthday-list big">
+          {activeTab === "students" ? (
+            birthdays.students.length ? (
+              <ul>
+                {birthdays.students.map((b, i) => (
+                  <li key={i}>
+                    🎂 {b.fullName} (Class {b.studentclass})
+                  </li>
+                ))}
+              </ul>
+            ) : <p>No student birthdays 🎉</p>
+          ) : birthdays.teachers.length ? (
             <ul>
-              {birthdays.students.map((b, i) => (
+              {birthdays.teachers.map((t, i) => (
                 <li key={i}>
-                  🎂 {b.fullName} (Class {b.studentclass})
+                  🎂 {t.fullName} ({t.qualification})
                 </li>
               ))}
             </ul>
-          ) : <p>No student birthdays 🎉</p>
-        ) : birthdays.teachers.length ? (
-          <ul>
-            {birthdays.teachers.map((t, i) => (
-              <li key={i}>
-                🎂 {t.fullName} ({t.qualification})
-              </li>
-            ))}
-          </ul>
-        ) : <p>No teacher birthdays 🎉</p>}
+          ) : <p>No teacher birthdays 🎉</p>}
+        </div>
       </div>
     </div>
-  </div>
-)}
-
+  )}
 </div>
 
-</div>
+        </div>
       </div>
     </div>
   );
 };
 
-// 🔹 Card Component
-const Card = ({ title, value, color, icon }) => (
+// Card
+const Card = React.memo(({ title, value, color, icon }) => (
   <div className="card" style={{ background: color }}>
-          <h3>{title}</h3>
+    <h3>{title}</h3>
     <div className="card-icon">
-
       <div>{icon}</div>
-    <p>{value}</p>
- 
-     </div>
-    
+      <p>{value}</p>
+    </div>
   </div>
-);
+));
 
-export default Home;
+export default React.memo(Home);

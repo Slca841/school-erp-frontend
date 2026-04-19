@@ -1,5 +1,5 @@
 const BASE_URL =  "https://school-erp-backend-dvh0.onrender.com";
-// const BASE_URL =  "http://10.225.184.238:5000";
+// const BASE_URL =  "http://10.97.117.238:5000";
 
 // Saare endpoints ek object me
 export const API_URLS = {

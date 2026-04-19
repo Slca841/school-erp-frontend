@@ -7,6 +7,7 @@ import autoTable from "jspdf-autotable";
 import "./Student.css";
 
 const Student = () => {
+
   const [students, setStudents] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
@@ -14,9 +15,13 @@ const Student = () => {
   const [feeFilter, setFeeFilter] = useState("");
   const [selected, setSelected] = useState([]);
   const [action, setAction] = useState("");
+  const selectedSet = React.useMemo(() => new Set(selected), [selected]);
   const [isAllSelected, setIsAllSelected] = useState(false);
 const [activeTab, setActiveTab] = useState("ACTIVE");
 const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const limit = 20;
+
   const role = localStorage.getItem("role");
   const classes = [
     "Nursery",
@@ -36,13 +41,11 @@ const [loading, setLoading] = useState(false);
     "12th",
   ];
 useEffect(() => {
-  setStudents([]);   // 👈 CLEAR OLD DATA
-  setFiltered([]);   // 👈 CLEAR FILTERED DATA
-  fetchStudents(activeTab);
-}, [activeTab]);
-
-
-
+  fetchStudents(activeTab, page);
+}, [activeTab, page, classFilter, search, feeFilter]);
+useEffect(() => {
+  setPage(1);
+}, [classFilter, search, feeFilter]);
   useEffect(() => {
     applyFilters();
   }, [search, classFilter, feeFilter, students]);
@@ -64,28 +67,40 @@ useEffect(() => {
 }, []);
 
   // ✅ Fetch all students (alphabetically sorted)
-  const fetchStudents = async (tab) => {
-    try {
-      setLoading(true);
-      const url =
-        tab === "ACTIVE"
-          ? `${API_URLS.GET_STUDENTS}/students/active`
-          : `${API_URLS.GET_STUDENTS}/students/tc`;
+const fetchStudents = async (tab, pageNum = 1) => {
+  try {
+    setLoading(true);
 
-      const res = await axios.get(url);
-      if (res.data.success) {
-        const sortedData = res.data.students.sort((a, b) =>
-          (a.fullName || "").localeCompare(b.fullName || "")
-        );
-        setStudents(sortedData);
-        setFiltered(sortedData);
-      }
-    } catch (err) {
-      console.error("Error fetching students:", err.message);
-    } finally {
-      setLoading(false);
+    let url =
+      tab === "ACTIVE"
+        ? `${API_URLS.GET_STUDENTS}/students/active?page=${pageNum}&limit=20`
+        : `${API_URLS.GET_STUDENTS}/students/tc?page=${pageNum}&limit=20`;
+
+    // 🔥 ADD FILTER PARAMS
+    if (classFilter !== "All") {
+      url += `&class=${classFilter}`;
     }
-  };
+
+    if (search) {
+      url += `&search=${search}`;
+    }
+
+    if (feeFilter) {
+      url += `&fee=${feeFilter}`;
+    }
+
+    const res = await axios.get(url);
+
+    if (res.data.success) {
+      setStudents(res.data.students || []);
+    }
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ✅ Apply filters + sorting
   const applyFilters = () => {
@@ -370,34 +385,17 @@ setAction("");
           </thead>
           <tbody>
             {filtered.length > 0 ? (
-              filtered.map((s) => (
-                <tr key={s._id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selected.includes(s._id)}
-                      onChange={() => toggleSelect(s._id)}
-                    />
-                  </td>
-                  <td>{s.fullName}</td>
-                  <td>{s.studentclass}</td>
-                  <td>{s.contact1}</td>
-                   {activeTab === "ACTIVE" && <td>₹{s.remainingFee}</td>}
-                  <td>
-                    <Link to={`student/${s._id}`} className="view-btn">
-                      👤 View
-                    </Link>
-                  {activeTab === "TC_APPROVED" && role === "admin" && (
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(s._id)}
-                  >
-                    🗑️ Delete
-                  </button>
-                )}
-                  </td>
-                </tr>
-              ))
+         students.map((s) => (
+  <Row
+    key={s._id}
+    s={s}
+     selectedSet={selectedSet}
+    toggleSelect={toggleSelect}
+    activeTab={activeTab}
+    role={role}
+    handleDelete={handleDelete}
+  />
+))
             ) : (
               <tr>
                 <td colSpan="6" className="no-data">
@@ -407,10 +405,60 @@ setAction("");
             )}
           </tbody>
         </table>
+                        <div className="pagination">
+<button
+  disabled={page === 1}
+  onClick={() => setPage((prev) => prev - 1)}
+>
+  ⬅ Prev
+</button>
+
+<span>Page {page}</span>
+
+<button
+  onClick={() => setPage((prev) => prev + 1)}
+>
+  Next ➡
+</button>
+</div>
       </div>
       )}
     </div>
   );
 };
+// 🔥 Row Component (memo)
+const Row = React.memo(({ s, selectedSet, toggleSelect, activeTab, role, handleDelete }) => {
 
-export default Student;
+  return (
+    <tr>
+      <td>
+        <input
+          type="checkbox"
+  checked={selectedSet.has(s._id)}
+          onChange={() => toggleSelect(s._id)}
+        />
+      </td>
+      <td>{s.fullName}</td>
+      <td>{s.studentclass}</td>
+      <td>{s.contact1}</td>
+
+      {activeTab === "ACTIVE" && <td>₹{s.remainingFee}</td>}
+
+      <td>
+        <Link to={`student/${s._id}`} className="view-btn">
+          👤 View
+        </Link>
+
+        {activeTab === "TC_APPROVED" && role === "admin" && (
+          <button
+            className="delete-btn"
+            onClick={() => handleDelete(s._id)}
+          >
+            🗑️ Delete
+          </button>
+        )}
+      </td>
+    </tr>
+  );
+});
+export default React.memo(Student);
