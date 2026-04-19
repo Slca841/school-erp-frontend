@@ -30,6 +30,7 @@ const startEdit = () => {
     panalty: student.panalty ?? "",
     otherCharges: student.otherCharges ?? "",
     discount: student.discount ?? "",
+    transportationFee: student.transportationFee ?? "",
   });
   setEditMode(true);
 };
@@ -95,6 +96,7 @@ const startEdit = () => {
     { label: "Diary Fee", key: "diaryFee" },
     { label: "Identity Card Fee", key: "identityCardFee" },
     { label: "Penalty", key: "panalty" },
+    { label: "Transportation Fee", key: "transportationFee" },
     { label: "Other Charges", key: "otherCharges" },
     { label: "Discount", key: "discount" },
   ];

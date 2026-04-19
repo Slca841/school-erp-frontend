@@ -9,7 +9,6 @@ import "./Student.css";
 const Student = () => {
 
   const [students, setStudents] = useState([]);
-  const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
   const [classFilter, setClassFilter] = useState("All");
   const [feeFilter, setFeeFilter] = useState("");
@@ -18,6 +17,7 @@ const Student = () => {
   const selectedSet = React.useMemo(() => new Set(selected), [selected]);
   const [isAllSelected, setIsAllSelected] = useState(false);
 const [activeTab, setActiveTab] = useState("ACTIVE");
+const [totalStudents, setTotalStudents] = useState(0);
 const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const limit = 20;
@@ -46,16 +46,12 @@ useEffect(() => {
 useEffect(() => {
   setPage(1);
 }, [classFilter, search, feeFilter]);
-  useEffect(() => {
-    applyFilters();
-  }, [search, classFilter, feeFilter, students]);
 
 useEffect(() => {
  const handler = () => {
   setStudents([]);
-  setFiltered([]);
   setActiveTab("TC_APPROVED");
-  fetchStudents(activeTab);
+fetchStudents(activeTab, page);
 };
 
 
@@ -93,6 +89,7 @@ const fetchStudents = async (tab, pageNum = 1) => {
 
     if (res.data.success) {
       setStudents(res.data.students || []);
+       setTotalStudents(res.data.total || 0);
     }
 
   } catch (err) {
@@ -102,30 +99,7 @@ const fetchStudents = async (tab, pageNum = 1) => {
   }
 };
 
-  // ✅ Apply filters + sorting
-  const applyFilters = () => {
-    let data = [...students];
 
-    if (search) {
-      data = data.filter((s) =>
-        s.fullName.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (classFilter !== "All") {
-      data = data.filter((s) => s.studentclass === classFilter);
-    }
-
- if (feeFilter && activeTab === "ACTIVE") {
-  data = data.filter((s) => s.remainingFee > parseInt(feeFilter));
-}
-
-
-    // ✅ Always sort alphabetically after filtering
-    data.sort((a, b) => (a.fullName || "").localeCompare(b.fullName || ""));
-
-    setFiltered(data);
-  };
 
   // ✅ Toggle single student
   const toggleSelect = (id) => {
@@ -140,7 +114,7 @@ const fetchStudents = async (tab, pageNum = 1) => {
       setSelected([]);
       setIsAllSelected(false);
     } else {
-      setSelected(filtered.map((s) => s._id));
+      setSelected(students.map((s) => s._id));
       setIsAllSelected(true);
     }
   };
@@ -164,7 +138,7 @@ const fetchStudents = async (tab, pageNum = 1) => {
     if (selected.length === 0) return alert("No students selected!");
     if (!action) return alert("Please select an action first!");
 
-    const selectedStudents = filtered.filter((s) => selected.includes(s._id));
+    const selectedStudents = students.filter((s) => selected.includes(s._id));
 
     // 🟦 Upgrade
     if (action === "upgrade") {
@@ -186,7 +160,7 @@ const fetchStudents = async (tab, pageNum = 1) => {
           type: "upgrade",
         });
         alert(res.data.message || "Upgrade successful");
-      fetchStudents(activeTab);
+   fetchStudents(activeTab, page);
 setSelected([]);
 setIsAllSelected(false);
 setAction("");
@@ -212,7 +186,7 @@ setAction("");
           type: "degrade",
         });
         alert(res.data.message || "Downgrade successful");
-      fetchStudents(activeTab);
+  fetchStudents(activeTab, page);
 setSelected([]);
 setIsAllSelected(false);
 setAction("");
@@ -361,7 +335,7 @@ setAction("");
         </button>
       </div>
 
-      <p className="count-text">Total Students: {filtered.length}</p>
+      <p className="count-text">Total Students: {totalStudents}</p>
 
       {/* Table */}
       {!loading && (
@@ -384,7 +358,7 @@ setAction("");
             </tr>
           </thead>
           <tbody>
-            {filtered.length > 0 ? (
+            {students.length > 0 ? (
          students.map((s) => (
   <Row
     key={s._id}
@@ -416,6 +390,7 @@ setAction("");
 <span>Page {page}</span>
 
 <button
+  disabled={page * limit >= totalStudents}
   onClick={() => setPage((prev) => prev + 1)}
 >
   Next ➡

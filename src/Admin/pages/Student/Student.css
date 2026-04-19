@@ -276,6 +276,51 @@ color: white;
   padding: 12px;
   font-style: italic;
 }
+/* 🔥 Pagination Container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+/* 🔥 Buttons */
+.pagination button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #2196f3, #21cbf3);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* 🔥 Hover Effect */
+.pagination button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+}
+
+/* 🔥 Disabled Button */
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* 🔥 Page Number */
+.pagination span {
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border-radius: 6px;
+}
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   .students-container {
