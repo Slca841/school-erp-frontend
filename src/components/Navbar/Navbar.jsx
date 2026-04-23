@@ -32,6 +32,7 @@ const Navbar = () => {
     { name: "Students", path: "/account/students" },
     { name: "Class Fee", path: "/account/classFee" },
     { name: "Fee Reminder", path: "/account/feeReminder" },
+      { name: "New", path: "/account/newRecord" },
   ];
 
   return (

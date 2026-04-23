@@ -6,7 +6,7 @@ import StudentProfile from "../Admin/pages/Student/StudentProfile.jsx"; // ✅ i
 import AdminFeeReminder from "../Admin/pages/Remainder/AdminFeeReminder.jsx";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import ClassFeeReadOnly from "../Account/pages/ClassFeeReadOnly.jsx"
-
+import NewRecord from "../Admin/pages/newRecord/newRecord.jsx"
 const AccountDashboard = () => {
   return (
     <div className="dashboard-main">
@@ -21,6 +21,7 @@ const AccountDashboard = () => {
           <Route path="students/student/:id" element={<StudentProfile />} />
             <Route path="/feeReminder" element={<AdminFeeReminder />} />
               <Route path="/classFee" element={<ClassFeeReadOnly />} />
+               <Route path="/newRecord" element={<NewRecord />} />
         </Routes>
       </div>
     </div>
