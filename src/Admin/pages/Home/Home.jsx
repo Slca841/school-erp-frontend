@@ -25,18 +25,40 @@ const Home = () => {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        setLoading(true);
+     if (!summary) {
+  setLoading(true);
+}
 
-        // ✅ cache first
-        const cached = localStorage.getItem("dashboard");
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          setSummary(parsed.summary);
-          setBirthdays(parsed.birthdays);
-          setAttendance(parsed.attendance);
-          setClasses(parsed.classes);
-          setLoading(false);
-        }
+const dashboardCache = localStorage.getItem("dashboard_cache");
+const birthdayCache = localStorage.getItem("birthday_cache");
+
+const now = Date.now();
+      // ================= DASHBOARD CACHE =================
+if (dashboardCache) {
+  const parsed = JSON.parse(dashboardCache);
+
+  const isFresh =
+    now - parsed.timestamp < 2 * 60 * 1000;
+
+  if (isFresh) {
+    setSummary(parsed.summary);
+    setClasses(parsed.classes);
+    setAttendance(parsed.attendance);
+    setLoading(false);
+  }
+}
+
+// ================= BIRTHDAY CACHE =================
+if (birthdayCache) {
+  const parsed = JSON.parse(birthdayCache);
+
+  const today = new Date().toDateString();
+  const cacheDate = new Date(parsed.timestamp).toDateString();
+
+  if (today === cacheDate) {
+    setBirthdays(parsed.birthdays);
+  }
+}
 
         // ✅ parallel API
         const [summaryRes, birthdayRes, attendanceRes, classRes] = await Promise.all([
@@ -46,27 +68,43 @@ const Home = () => {
           axios.get(`${API_URLS.ASSIGN}/class`)
         ]);
 
-        const finalData = {
-          summary: summaryRes.data,
-          birthdays: {
-            students: birthdayRes.data?.students || [],
-            teachers: birthdayRes.data?.teachers || []
-          },
-          attendance: attendanceRes.data.success ? attendanceRes.data : null,
-          classes: classRes.data.success ? classRes.data.classes : []
-        };
-
+const finalData = {
+  summary: summaryRes.data,
+  attendance: attendanceRes.data,
+  classes: classRes.data.success
+    ? classRes.data.classes
+    : [],
+  timestamp: now
+};
         setSummary(finalData.summary);
         setBirthdays(finalData.birthdays);
+        const birthdayData = {
+  students: birthdayRes.data?.students || [],
+  teachers: birthdayRes.data?.teachers || []
+};
+
+setBirthdays(birthdayData);
+
+localStorage.setItem(
+  "birthday_cache",
+  JSON.stringify({
+    birthdays: birthdayData,
+    timestamp: now
+  })
+);
         setAttendance(finalData.attendance);
         setClasses(finalData.classes);
-
-        localStorage.setItem("dashboard", JSON.stringify(finalData));
+localStorage.setItem(
+  "dashboard_cache",
+  JSON.stringify(finalData)
+);
 
       } catch (err) {
         console.error("Dashboard error:", err.message);
       } finally {
-        setLoading(false);
+        if (!summary) {
+    setLoading(false);
+  }
       }
     };
 

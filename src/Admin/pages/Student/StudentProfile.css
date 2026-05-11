@@ -23,6 +23,31 @@ body {
     width: 80%;
 
 }
+.back-btn {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  border: none;
+  width: 50%;
+  margin: 0 auto;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+.back-btn:active {
+  transform: scale(0.97);
+}
+
 .delete-btn {
   background: #382c2c;
   color: rgb(86, 86, 86);

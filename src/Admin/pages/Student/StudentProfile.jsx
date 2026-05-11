@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import {
   fetchStudent,
@@ -12,6 +13,9 @@ import "./StudentProfile.css";
 
 const StudentProfile = () => {
   const { id } = useParams();
+  const location = useLocation();
+const navigate = useNavigate();
+const role = localStorage.getItem("role");
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("profile");
@@ -51,7 +55,21 @@ const StudentProfile = () => {
   return (
     <div className="profile-container">
 
- 
+ <button
+  className="back-btn"
+  onClick={() => {
+   navigate(
+  role === "admin"
+    ? "/admin/students"
+    : "/account/students",
+  {
+    state: location.state
+  }
+);
+  }}
+>
+  ⬅ Back
+</button>
  
 
       <div className="tabs top-tabs">

@@ -1,25 +1,35 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URLS } from "../../../Context/config.js";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "./Student.css";
 
 const Student = () => {
-
+const location = useLocation();
   const [students, setStudents] = useState([]);
-  const [search, setSearch] = useState("");
-  const [classFilter, setClassFilter] = useState("All");
-  const [feeFilter, setFeeFilter] = useState("");
+const [search, setSearch] = useState(
+  location.state?.search || ""
+);
+const [classFilter, setClassFilter] = useState(
+  location.state?.classFilter || "All"
+);
+const [feeFilter, setFeeFilter] = useState(
+  location.state?.feeFilter || ""
+);
   const [selected, setSelected] = useState([]);
   const [action, setAction] = useState("");
   const selectedSet = React.useMemo(() => new Set(selected), [selected]);
   const [isAllSelected, setIsAllSelected] = useState(false);
-const [activeTab, setActiveTab] = useState("ACTIVE");
+const [activeTab, setActiveTab] = useState(
+  location.state?.activeTab || "ACTIVE"
+);
 const [totalStudents, setTotalStudents] = useState(0);
 const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+const [page, setPage] = useState(
+  location.state?.page || 1
+);
   const limit = 20;
 
   const role = localStorage.getItem("role");
@@ -360,15 +370,19 @@ setAction("");
           <tbody>
             {students.length > 0 ? (
          students.map((s) => (
-  <Row
-    key={s._id}
-    s={s}
-     selectedSet={selectedSet}
-    toggleSelect={toggleSelect}
-    activeTab={activeTab}
-    role={role}
-    handleDelete={handleDelete}
-  />
+<Row
+  key={s._id}
+  s={s}
+  selectedSet={selectedSet}
+  toggleSelect={toggleSelect}
+  activeTab={activeTab}
+  role={role}
+  handleDelete={handleDelete}
+  page={page}
+  classFilter={classFilter}
+  search={search}
+  feeFilter={feeFilter}
+/>
 ))
             ) : (
               <tr>
@@ -402,7 +416,18 @@ setAction("");
   );
 };
 // 🔥 Row Component (memo)
-const Row = React.memo(({ s, selectedSet, toggleSelect, activeTab, role, handleDelete }) => {
+const Row = React.memo(({
+  s,
+  selectedSet,
+  toggleSelect,
+  activeTab,
+  role,
+  handleDelete,
+  page,
+  classFilter,
+  search,
+  feeFilter
+}) => {
 
   return (
     <tr>
@@ -420,7 +445,17 @@ const Row = React.memo(({ s, selectedSet, toggleSelect, activeTab, role, handleD
       {activeTab === "ACTIVE" && <td>₹{s.remainingFee}</td>}
 
       <td>
-        <Link to={`student/${s._id}`} className="view-btn">
+       <Link
+  to={`student/${s._id}`}
+  state={{
+    page,
+    classFilter,
+    activeTab,
+    search,
+    feeFilter
+  }}
+  className="view-btn"
+>
           👤 View
         </Link>
 

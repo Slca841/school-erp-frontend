@@ -15,36 +15,65 @@ import "./AccountHome.css";
 const AccountHome = () => {
     const navigate = useNavigate();
   const [summary, setSummary] = useState(null);
-  const [birthdays, setBirthdays] = useState([]);
+const [birthdays, setBirthdays] = useState({
+  students: [],
+  teachers: []
+});
   const [loading, setLoading] = useState(true);
+const loadDashboard = async () => {
+  try {
 
-  // 🔹 Fetch Fee Summary
-  const fetchSummary = async () => {
-    try {
-      const res = await axios.get(`${API_URLS.GET_STUDENTS}/fees/summary`);
-      setSummary(res.data);
-    } catch (err) {
-      console.error("Error fetching summary:", err.message);
-    } finally {
-      setLoading(false);
+    // 🔥 cache first
+    const cached = localStorage.getItem("account_dashboard");
+
+    if (cached) {
+      const parsed = JSON.parse(cached);
+
+      const isFresh =
+        Date.now() - parsed.timestamp < 2 * 60 * 1000;
+
+      if (isFresh) {
+        setSummary(parsed.summary);
+        setBirthdays(parsed.birthdays);
+        setLoading(false);
+      }
     }
-  };
 
-  // 🔹 Fetch Today's Birthdays
-  const fetchBirthdays = async () => {
-    try {
-      const res = await axios.get(`${API_URLS.GET_STUDENTS}/birthdays/today`);
-      const data = res.data.birthdays || res.data.data || [];
-      setBirthdays(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error fetching birthdays:", err.message);
-    }
-  };
+    // 🔥 parallel fetch
+    const [summaryRes, birthdayRes] = await Promise.all([
+      axios.get(`${API_URLS.GET_STUDENTS}/fees/summary`),
+      axios.get(`${API_URLS.GET_STUDENTS}/birthdays/today`)
+    ]);
 
-  useEffect(() => {
-    fetchSummary();
-    fetchBirthdays();
-  }, []);
+const birthdayData = {
+  students: birthdayRes.data?.students || [],
+  teachers: birthdayRes.data?.teachers || []
+};
+
+    setSummary(summaryRes.data);
+setBirthdays(birthdayData);
+
+    // 🔥 save cache
+    localStorage.setItem(
+      "account_dashboard",
+      JSON.stringify({
+        summary: summaryRes.data,
+        birthdays: birthdayData,
+        timestamp: Date.now()
+      })
+    );
+
+  } catch (err) {
+    console.error("Dashboard Error:", err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+useEffect(() => {
+  loadDashboard();
+}, []);
 
   if (loading)
     return (
@@ -142,9 +171,9 @@ const AccountHome = () => {
         {/* Birthday Widget */}
         <div className="widget birthday-box">
           <h2>🎂 Today's Birthdays</h2>
-          {birthdays.length > 0 ? (
+    {birthdays.students.length > 0 ? (
             <ul className="birthday-list">
-              {birthdays.map((b, idx) => (
+              {birthdays.students.map((b, idx) => (
                 <li key={idx}>
                   <FaBirthdayCake className="cake-icon" /> {b.fullName} —{" "}
                   <span>Class {b.studentclass}</span>
@@ -161,7 +190,7 @@ const AccountHome = () => {
 };
 
 // 🔹 Card Component
-const Card = ({ title, value, color, icon }) => (
+const Card = React.memo(({ title, value, color, icon }) => (
   <div className="stat-card" style={{ background: color }}>
     <h3>{title}</h3>
    <div className="ndisplay">
@@ -169,7 +198,6 @@ const Card = ({ title, value, color, icon }) => (
     <p>{value}</p>
    </div>
   </div>
+)
 );
-
-
-export default AccountHome;
+export default React.memo(AccountHome);

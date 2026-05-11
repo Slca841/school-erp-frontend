@@ -216,17 +216,19 @@ formData.append("createdById", adminId);        // ✅ send id to backend
     onClick={() => setPreviewImage(n.image)}
   />
 )}
-<small>
-  🧑‍💼 Created By: {n.senderName || "System"}
+
+<small className="notice-date">
+  📅 {new Date(n.createdAt).toLocaleString("en-IN")}
 </small>
 
 
-
                 <small>
-                  🎯 {n.targetType}{" "}
+                  🎯 Target :- {n.targetType}{" "}
                   {n.targetType === "class" ? `(${n.targetClass})` : ""}
                 </small>
-
+<small>
+  🧑‍💼 Created By: {n.senderName || "System"}
+</small>
                 {/* ✅ SAME ACTION BUTTONS AS OLD COMPONENT */}
                 <div className="notice-actions">
                   <button onClick={() => handleEdit(n)}>✏️ Edit</button>

@@ -14,6 +14,7 @@ const LabeledInput = memo(({ label, children }) => (
 
 const NewRecord = () => {
   const [activeRole, setActiveRole] = useState("student");
+  const role = localStorage.getItem("role");
   const [classes, setClasses] = useState([]);
   const [authorizedPersons, setAuthorizedPersons] = useState([
     { name: "", relation: "", contactNumber: "", note: "" },
@@ -139,7 +140,12 @@ const NewRecord = () => {
     <div className="register-container">
       {/* Role Switch Buttons */}
       <div className="toggle-buttons">
-        {["student", "teacher", "account", "bulk"].map((role) => (
+   {[
+  "student",
+  "teacher",
+  ...(role === "admin" ? ["account"] : []),
+  "bulk"
+].map((role) => (
           <button
             key={role}
             className={activeRole === role ? "active" : ""}
