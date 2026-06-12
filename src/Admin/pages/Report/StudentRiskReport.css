@@ -1,0 +1,189 @@
+@media print {
+  .filter-box,
+  .generate-btn {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  .report-card {
+    box-shadow: none !important;
+    border: 1px solid #000;
+  }
+
+  .report-table {
+    width: 100%;
+  }
+
+  .risk-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}
+.risk-report-container {
+  padding: 20px;
+}
+
+.risk-title {
+    text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2563eb;
+}
+
+.filter-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  justify-content: center;
+}
+
+.filter-box select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  min-width: 180px;
+  font-size: 14px;
+  outline: none;
+}
+
+.generate-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.generate-btn:hover {
+  background: #1d4ed8;
+}
+.generate-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.report-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table thead {
+  background: #2563eb;
+  color: white;
+}
+
+.report-table th {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.report-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.report-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.student-name {
+  font-weight: 600;
+}
+
+.absent-count {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.homework-count {
+  color: #ea580c;
+  font-weight: 700;
+}
+
+.contact {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.risk-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.risk-critical {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.risk-warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.risk-normal {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.summary-box {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  flex: 1;
+  min-width: 200px;
+  background: white;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.summary-card h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.summary-card h2 {
+  margin-top: 10px;
+  font-size: 28px;
+}
+
+.summary-critical h2 {
+  color: #dc2626;
+}
+
+.summary-warning h2 {
+  color: #d97706;
+}
+
+.summary-total h2 {
+  color: #2563eb;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-size: 16px;
+}

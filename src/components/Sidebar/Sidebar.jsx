@@ -82,6 +82,7 @@ const Sidebar = () => {
     { name: "Notice", path: "/admin/notice" },
     { name: "FeeReminder", path: "/admin/feeReminder" },
      { name: "Admin Tools", path: "/admin/adminTools" },
+          { name: "Report", path: "/admin/report" },
   ];
 
   // Account role: only fee / students related (view-only)
@@ -91,6 +92,7 @@ const Sidebar = () => {
     { name: "Fee Collection", path: "/account/fee-collection" },
     { name: "Fee Reports", path: "/account/fee-reports" },
     { name: "FeeReminder", path: "/account/feeReminder" },
+    { name: "Report", path: "/account/report" },
 
   ];
 

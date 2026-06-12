@@ -21,6 +21,7 @@ export const API_URLS = {
 EVENT: `${BASE_URL}/api/event`,
 SCHOOL: `${BASE_URL}/api/school`,
 SECURE: `${BASE_URL}/api/secure`,
+REPORT: `${BASE_URL}/api/report/student-risk-report`,
 };
 
 export default API_URLS;

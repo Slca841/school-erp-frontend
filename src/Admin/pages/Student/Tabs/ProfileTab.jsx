@@ -31,7 +31,7 @@ const ProfileTab = ({ student, setStudent, studentId }) => {
     student?.guardian?.authorizedPersons || []
   );
   const [attendanceSummary, setAttendanceSummary] = useState(null);
-
+const [homeworkSummary, setHomeworkSummary] = useState(null);
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
 
@@ -82,7 +82,20 @@ const ProfileTab = ({ student, setStudent, studentId }) => {
       .then((res) => setAttendanceSummary(res.data))
       .catch(() => {});
   }, [studentId]);
+useEffect(() => {
+  if (!studentId) return;
 
+  axios
+    .get(
+      `${API_URLS.HOMEWORK}/student-report/${studentId}`
+    )
+    .then((res) =>
+      setHomeworkSummary(res.data)
+    )
+    .catch(() => {
+      setHomeworkSummary(null);
+    });
+}, [studentId]);
   useEffect(() => {
     setUserData({
       username: student?.userId?.name || "",
@@ -231,7 +244,91 @@ const setNestedValue = (obj, path, value) => {
           </div>
         )}
       </div>
+{/* ===== HOMEWORK SUMMARY ===== */}
 
+<div className="attendance-summary-box">
+  <h3 className="section-subtitle">
+    📚 Homework Summary
+  </h3>
+
+  {!homeworkSummary ? (
+    <p>Loading...</p>
+  ) : (
+    <>
+      <div className="attendance-grid">
+    
+        <div className="att-card present">
+          <span>Completed</span>
+
+          <strong>
+            {
+              homeworkSummary.overall
+                .completed
+            }
+          </strong>
+        </div>
+
+        <div className="att-card absent">
+          <span>Pending</span>
+
+          <strong>
+            {homeworkSummary.overall.pending}
+          </strong>
+        </div>
+
+        <div className="att-card leave">
+          <span>Total Homework</span>
+
+          <strong>
+            {homeworkSummary.overall.total}
+          </strong>
+        </div>
+            <div className="att-card total">
+          <span>Overall Score</span>
+
+          <strong>
+            {Math.round(
+              (homeworkSummary.overall.completed /
+                Math.max(
+                  homeworkSummary.overall.total,
+                  1
+                )) *
+                100
+            )}
+            %
+          </strong>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 20 }}>
+        {Object.entries(
+          homeworkSummary.subjectWise || {}
+        ).map(([subject, data]) => (
+          <div
+            key={subject}
+            style={{
+              display: "flex",
+              justifyContent:
+                "space-between",
+              padding: "10px 0",
+              borderBottom:
+                "1px solid #ddd",
+            }}
+          >
+            <span className="subname">
+              📘 {subject}
+            </span>
+
+            <strong className="subname">
+              {data.completed}/
+              {data.total}
+            </strong>
+          </div>
+        ))}
+      </div>
+    </>
+  )}
+</div>
       {/* ===== AUTHORIZED GUARDIANS ===== */}
       <div className="authorized-section">
         <h3 className="section-subtitle">🧾 Authorized Guardians</h3>

@@ -13,6 +13,7 @@ import AdminNotice from "./pages/Notice/adminNotice.jsx";
 import AdminFeeReminder from "./pages/Remainder/AdminFeeReminder.jsx";
 import EventCalendar from "./pages/Home/EventCal.jsx";
 import AdminTools from "./pages/AdminTools/AdminTools.jsx";
+import StudentRiskReport from "./pages/Report/StudentRiskReport.jsx";
 
 const AdminDashboard = () => {
   return (
@@ -29,6 +30,7 @@ const AdminDashboard = () => {
           <Route path="/teacher/complaints" element={<TeacherComplaints />} />
           <Route path="/notice" element={<AdminNotice />} />
           <Route path="/feeReminder" element={<AdminFeeReminder />} />
+              <Route path="/report" element={<StudentRiskReport />} />
                     <Route path="/adminTools" element={<AdminTools />} />
           <Route path="/eventCalendar" element={<EventCalendar isAdmin={true} />} />
         </Routes>

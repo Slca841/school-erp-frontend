@@ -689,7 +689,9 @@ body {
   margin-top: 15px;
   font-size: 14px;
 }
-
+.subname{
+  color: var(--text-color);
+}
 /* ---------- Smooth Table Shadow When Editing ---------- */
 .authorized-table input:focus {
   background: #fff;
