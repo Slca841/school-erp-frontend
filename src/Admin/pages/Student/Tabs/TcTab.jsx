@@ -32,7 +32,7 @@ const TcTab = ({ student, studentId, reload }) => {
 
     alert("✅ TC Approved Successfully");
 
-    generateTC({ ...student, ...tc });
+ generateTC({ ...student, ...tc }, true);
 
     setShowModal(false);
     setDateOfLeaving("");

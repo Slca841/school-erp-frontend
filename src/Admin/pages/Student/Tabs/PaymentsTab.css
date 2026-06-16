@@ -203,6 +203,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
 .fee-field label {
@@ -219,16 +220,20 @@
 }
 
 .fee-input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  transition: 0.3s ease;
+  max-width: 130px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  text-align: left;
+  transition: all 0.3s ease;
 }
+
 .fee-input:focus {
+  outline: none;
   border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 /* ---------- Modal ---------- */

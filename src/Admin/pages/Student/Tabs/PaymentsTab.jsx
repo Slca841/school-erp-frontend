@@ -169,12 +169,21 @@ student.status === "ACTIVE" &&(
           </div>
         </div>
 
-        <button
-          className="btn-download"
-          onClick={() => generateReceipt(student)}
-        >
-          📄 Download Receipt
-        </button>
+   <div style={{ display: "flex", gap: "10px" }}>
+  <button
+    className="btn-download"
+    onClick={() => generateReceipt(student)}
+  >
+    📄 Download Receipt
+  </button>
+
+  <button
+    className="btn-primary"
+    onClick={() => generateReceipt(student, true)}
+  >
+    🖨 Print Receipt
+  </button>
+</div>
       </div>
 
       {/* ================= RIGHT : OTHER FEES ================= */}
@@ -189,6 +198,7 @@ student.status === "ACTIVE" &&(
                 <div className="fee-value">₹{student[f.key] || 0}</div>
               ) : (
          <input
+           className="fee-input"
   type="number"
   value={feeForm[f.key] ?? ""}
   onChange={(e) =>

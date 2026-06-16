@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export const generateTC = (student) => {
+export const generateTC = (student, autoPrint = false) => {
   const getCurrentSession = () => {
   const today = new Date();
   const year = today.getFullYear();
@@ -152,23 +152,44 @@ y += 10;
   doc.text("Principal", 155, y + 6);
 
   /* ================= SAVE ================= */
+if (autoPrint) {
+  doc.autoPrint();
+
+  const blobUrl = doc.output("bloburl");
+
+  const printWindow = window.open(blobUrl, "_blank");
+
+  if (printWindow) {
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+    };
+  }
+} else {
   doc.save(`TC_${student.fullName}.pdf`);
+}
 };
 
 
-export const generateReceipt = (student) => {
-  const doc = new jsPDF();
+export const generateReceipt = (student, autoPrint = false) => {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a5", // Half A4 Size
+  });
 
   // Watermark
-  doc.setFontSize(40);
+  doc.setFontSize(28);
   doc.setTextColor(200, 200, 200);
-  doc.text("Sant Laxman Chataniya Academy", 30, 220, { angle: 45 });
+doc.text("Sant Laxman Chaitanya Academy", 15, 120, {
+  angle: 45,
+});
 
   // Title
-  doc.setFontSize(16);
+  doc.setFontSize(14);
   doc.setTextColor(0, 0, 0);
-  doc.text("Sant Laxman Chataniya Academy", 105, 20, { align: "center" });
-  doc.text("Fee Receipt", 105, 28, { align: "center" });
+  doc.text("Sant Laxman Chataniya Academy", 74, 15, { align: "center" });
+  doc.text("Fee Receipt", 74, 22, { align: "center" });
 
   // Student Info
   doc.setFontSize(11);
@@ -186,9 +207,18 @@ export const generateReceipt = (student) => {
   ]);
 
   autoTable(doc, {
-    startY: 70,
+    startY: 60,
     head: [["No.", "Date", "Month", "Year", "Amount"]],
-    body: tableData,
+   body: tableData.map((row) => [
+    row[0],
+    row[1],
+    row[2],
+    row[3], 
+    row[4],
+  ]),
+  styles: {
+    fontSize: 8,
+  },
   });
 
   // Totals Calculation
@@ -213,28 +243,68 @@ const valueX = pageWidth - rightMargin; // prices bilkul right
 
   doc.setFontSize(10);
   
-  doc.text("Yearly Fee:", labelX, finalY + 18);
-  doc.text(`Rs. ${student.yearlyFee || 0}`, valueX, finalY + 18, { align: "right" });
-  
-  
-  doc.text("Other Fee:", labelX, finalY + 26);
-  doc.text(`Rs. ${student.otherFees || 0}`, valueX, finalY + 26, { align: "right" });
-  
-  doc.text("Discount:", labelX, finalY + 34);
-  doc.text(`Rs. ${student.discount || 0}`, valueX, finalY + 34, { align: "right" });
-  
-  doc.text("Total Submitted:", labelX, finalY + 10);
-  doc.text(`Rs. ${totalSubmitted}`, valueX, finalY + 10, { align: "right" });
-  
-  doc.setFontSize(11);
-  doc.setFont(undefined, "bold");
-  doc.text("Total Fee:", labelX, finalY + 44);
-  doc.text(`Rs. ${totalFee}`, valueX, finalY + 44, { align: "right" });
+let summaryY = finalY + 10;
 
-  doc.setTextColor(200, 0, 0);
-  doc.text("Remaining:", labelX, finalY + 52);
-  doc.text(`Rs. ${due}`, valueX, finalY + 52, { align: "right" });
+doc.text("Total Submitted:", labelX, summaryY);
+doc.text(`Rs. ${totalSubmitted}`, valueX, summaryY, {
+  align: "right",
+});
+
+summaryY += 8;
+
+doc.text("Yearly Fee:", labelX, summaryY);
+doc.text(`Rs. ${student.yearlyFee || 0}`, valueX, summaryY, {
+  align: "right",
+});
+
+summaryY += 8;
+
+doc.text("Other Fee:", labelX, summaryY);
+doc.text(`Rs. ${student.otherFees || 0}`, valueX, summaryY, {
+  align: "right",
+});
+
+if ((student.discount || 0) > 0) {
+  summaryY += 8;
+
+  doc.text("Discount:", labelX, summaryY);
+  doc.text(`Rs. ${student.discount}`, valueX, summaryY, {
+    align: "right",
+  });
+}
+
+summaryY += 10;
+
+doc.setFont(undefined, "bold");
+doc.text("Total Fee:", labelX, summaryY);
+doc.text(`Rs. ${totalFee}`, valueX, summaryY, {
+  align: "right",
+});
+
+summaryY += 8;
+
+doc.setTextColor(200, 0, 0);
+doc.text("Remaining:", labelX, summaryY);
+doc.text(`Rs. ${due}`, valueX, summaryY, {
+  align: "right",
+});
 
   // Save PDF
   doc.save(`${student.fullName}_receipt.pdf`);
+
+    if (autoPrint) {
+    doc.autoPrint();
+
+    const blobUrl = doc.output("bloburl");
+
+    const printWindow = window.open(blobUrl, "_blank");
+
+    if (printWindow) {
+      printWindow.onload = () => {
+        printWindow.print();
+      };
+    }
+  } else {
+    doc.save(`${student.fullName}_receipt.pdf`);
+  }
 };
