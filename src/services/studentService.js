@@ -53,10 +53,18 @@ export const deletePayment = async (paymentId) => {
 // 🔹 Save Other Fees
 export const saveOtherFees = async (id, fees) => {
   try {
-    const res = await axios.put(`${API_URLS.GET_STUDENTS}/other/${id}`, fees);
+    console.log("Sending Fees:", fees);
+
+    const res = await axios.put(
+      `${API_URLS.GET_STUDENTS}/other/${id}`,
+      fees
+    );
+
+    console.log("Response:", res.data);
+
     return res.data.success ? res.data.fees : null;
   } catch (err) {
-    console.error("Error saving other fees", err);
+    console.error(err);
     return null;
   }
 };

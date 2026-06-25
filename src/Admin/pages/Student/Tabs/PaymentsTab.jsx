@@ -10,12 +10,15 @@ import "./PaymentsTab.css";
 const PaymentsTab = ({ student, setStudent, reload }) => {
   const [showAddFee, setShowAddFee] = useState(false);
   const [amount, setAmount] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
+const [installment, setInstallment] = useState("");
+ const [year, setYear] = useState(new Date().getFullYear());
   const [editMode, setEditMode] = useState(false);
-    const months = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
+const installments = [
+  "Admission Fee",
+  "Installment 1",
+  "Installment 2",
+  "Installment 3",
+  "Installment 4",
 ];
 const [feeForm, setFeeForm] = useState({});
 const startEdit = () => {
@@ -51,13 +54,13 @@ const startEdit = () => {
 
   /* -------------------------------- ADD PAYMENT -------------------------------- */
   const handleAddPayment = async () => {
-    if (!amount || !month || !year)
-      return alert("⚠️ Please fill all fields");
+  if (!amount || !installment || !year)
+        return alert("⚠️ Please fill all fields");
 
     const success = await addPayment({
       studentId: student._id,
       paidAmount: Number(amount),
-      month,
+      installment,
       year,
     });
 
@@ -65,8 +68,8 @@ const startEdit = () => {
       alert("✅ Payment added");
       setShowAddFee(false);
       setAmount("");
-      setMonth("");
-      setYear("");
+      setInstallment("");
+      setYear(new Date().getFullYear());
       reload(); // backend recalculation
     }
   };
@@ -89,6 +92,7 @@ const startEdit = () => {
 
   /* ---------------------------- EDITABLE FIELDS ---------------------------- */
   const feeFields = [
+      { label: "Previous Year Fee", key: "previousYearFee" },
     { label: "Exam Fee", key: "examFee" },
     { label: "Admission Fee", key: "admissionFee" },
     { label: "Annual Function Fee", key: "annualFunctionFee" },
@@ -122,6 +126,7 @@ student.status === "ACTIVE" &&(
               <tr>
                 <th>#</th>
                 <th>Date</th>
+                <th>Installment</th>
                 <th>Amount</th>
                 <th>Action</th>
               </tr>
@@ -131,6 +136,7 @@ student.status === "ACTIVE" &&(
                 <tr key={p._id}>
                   <td>{i + 1}</td>
                   <td>{new Date(p.date).toLocaleDateString()}</td>
+                  <td>{p.installment}</td>
                   <td>₹{p.paidAmount}</td>
                   <td>
                     <button
@@ -239,17 +245,18 @@ student.status === "ACTIVE" &&(
               onChange={(e) => setAmount(e.target.value)}
             />
 
-
 <select
-  value={month}
-  onChange={(e) => setMonth(e.target.value)}
+    value={installment}
+    onChange={(e)=>setInstallment(e.target.value)}
 >
-  <option value="">-- Select Month --</option>
-  {months.map((m) => (
-    <option key={m} value={m}>{m}</option>
-  ))}
-</select>
+    <option value="">-- Select Installment --</option>
 
+    {installments.map((i)=>(
+        <option key={i} value={i}>
+            {i}
+        </option>
+    ))}
+</select>
 
             <input
               type="number"
