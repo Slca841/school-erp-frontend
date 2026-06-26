@@ -4,7 +4,7 @@ import {
   addPayment,
   saveOtherFees,
 } from "../../../../services/studentService.js";
-import { generateReceipt } from "../utils/pdfUtils.js";
+import { generateReceipt, generatePaymentReceipt, } from "../utils/pdfUtils.js";
 import "./PaymentsTab.css";
 
 const PaymentsTab = ({ student, setStudent, reload }) => {
@@ -128,6 +128,7 @@ student.status === "ACTIVE" &&(
                 <th>Date</th>
                 <th>Installment</th>
                 <th>Amount</th>
+                <th>Receipt</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -138,6 +139,18 @@ student.status === "ACTIVE" &&(
                   <td>{new Date(p.date).toLocaleDateString()}</td>
                   <td>{p.installment}</td>
                   <td>₹{p.paidAmount}</td>
+                                    <td>
+
+
+  <button
+    className="btn-primary"
+    onClick={() =>
+      generatePaymentReceipt(student, p, true)
+    }
+  >
+    🖨
+  </button>
+</td>
                   <td>
                     <button
                       className="btn-delete"
@@ -146,6 +159,7 @@ student.status === "ACTIVE" &&(
                       🗑
                     </button>
                   </td>
+
                 </tr>
               ))}
             </tbody>

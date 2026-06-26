@@ -16,7 +16,8 @@ const TcTab = ({ student, studentId, reload }) => {
     const list = await fetchStudentTCs(studentId);
     setTcList(list);
   };
-
+const hasTC = tcList.length > 0;
+const latestTC = tcList[0];
   // 🔹 Final approve
   const handleConfirmApprove = async () => {
     if (!dateOfLeaving || !reasonOfTC) {
@@ -29,7 +30,7 @@ const TcTab = ({ student, studentId, reload }) => {
     });
 
     if (!tc) return;
-
+console.log("TC FROM API:", tc);
     alert("✅ TC Approved Successfully");
 
  generateTC({ ...student, ...tc }, true);
@@ -53,12 +54,29 @@ const TcTab = ({ student, studentId, reload }) => {
       <h2 className="section-title">Transfer Certificate</h2>
 
       {/* ✅ Generate Button */}
-      <button
-        className="btn btn-save"
-        onClick={() => setShowModal(true)}
-      >
-        📜 Generate TC
-      </button>
+{hasTC ? (
+  <button
+    className="btn btn-save"
+    onClick={() =>
+      generateTC(
+        {
+          ...student,
+          ...latestTC,
+        },
+        true
+      )
+    }
+  >
+    🖨️ Print TC
+  </button>
+) : (
+  <button
+    className="btn btn-save"
+    onClick={() => setShowModal(true)}
+  >
+    📜 Generate TC
+  </button>
+)}
 
       {/* ================= MODAL ================= */}
       {showModal && (
