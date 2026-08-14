@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, memo } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import { API_URLS } from "../../../Context/config.js";
 import "./newrecord.css";
@@ -19,7 +20,7 @@ const NewRecord = () => {
   const [authorizedPersons, setAuthorizedPersons] = useState([
     { name: "", relation: "", contactNumber: "", note: "" },
   ]);
-
+const [errorMessage, setErrorMessage] = useState("");
   const initialFormState = {
     name: "",
     email: "",
@@ -120,15 +121,17 @@ const NewRecord = () => {
 
       const res = await axios.post(`${API_URLS.LOGIN}/register`, payload);
 
-      if (res.data.success) {
-        alert(`✅ ${activeRole.toUpperCase()} registered successfully`);
-         setFormData(initialFormState);
+if (res.data.success) {
+  setErrorMessage("");
+  alert(`✅ ${activeRole.toUpperCase()} registered successfully`);
+
+  setFormData(initialFormState);
   setAuthorizedPersons([
     { name: "", relation: "", contactNumber: "", note: "" },
   ]);
-      } else {
-        alert("❌ " + res.data.message);
-      }
+} else {
+  setErrorMessage(res.data.message);
+}
     } catch (err) {
       console.error("❌ Error submitting form:", err);
       alert("❌ Something went wrong!");
@@ -137,6 +140,28 @@ const NewRecord = () => {
 
   /* ✅ Render */
   return (
+    <>
+      {errorMessage &&
+      ReactDOM.createPortal(
+        <div className="error-popup-overlay">
+          <div className="error-popup">
+            <div className="error-popup-icon">❌</div>
+
+            <div className="error-popup-content">
+              <h3>Already Exists</h3>
+              <p>{errorMessage}</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setErrorMessage("")}
+            >
+              OK
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
     <div className="register-container">
       {/* Role Switch Buttons */}
       <div className="toggle-buttons">
@@ -175,6 +200,7 @@ const NewRecord = () => {
       </h2>
 
       <form key={activeRole} className="register-form" onSubmit={handleSubmit}>
+
         {/* COMMON FIELDS */}
 {["teacher", "account", "student"].includes(activeRole) && (
   <>
@@ -655,6 +681,7 @@ const NewRecord = () => {
       </form>
       
     </div>
+    </>
   );
 };
 
