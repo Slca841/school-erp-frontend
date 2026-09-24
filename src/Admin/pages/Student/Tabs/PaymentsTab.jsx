@@ -7,12 +7,23 @@ import {
 import { generateReceipt, generatePaymentReceipt, } from "../utils/pdfUtils.js";
 import "./PaymentsTab.css";
 
-const PaymentsTab = ({ student, setStudent, reload }) => {
+const PaymentsTab = ({ student, setStudent, reload,role  }) => {
   const [showAddFee, setShowAddFee] = useState(false);
   const [amount, setAmount] = useState("");
   const [installment, setInstallment] = useState("");
   const [year, setYear] = useState(new Date().getFullYear());
   const [editMode, setEditMode] = useState(false);
+  const currentSessionFee =
+  student?.fees?.sessionWiseFees?.find(
+    (fee) => fee.sessionId?.isCurrent === true
+  ) ||
+  student?.fees?.sessionWiseFees?.[student.fees.sessionWiseFees.length - 1];
+
+const currentPreviousYearFee = currentSessionFee?.previousYearFee ?? 0;
+const currentYearlyFee = currentSessionFee?.yearlyFee ?? 0;
+const currentTotalFee = currentSessionFee?.totalFee ?? 0;
+const currentPaidAmount = currentSessionFee?.paidAmount ?? 0;
+const currentRemainingAmount = currentSessionFee?.remainingAmount ?? 0;
   const installments = [
     "Admission Fee",
     "Installment 1",
@@ -62,26 +73,29 @@ const PaymentsTab = ({ student, setStudent, reload }) => {
   };
 
   /* -------------------------------- ADD PAYMENT -------------------------------- */
-  const handleAddPayment = async () => {
-    if (!amount || !installment || !year)
-      return alert("⚠️ Please fill all fields");
+const handleAddPayment = async () => {
+  if (!amount || !installment || !year) {
+    return alert("⚠️ Please fill all fields");
+  }
 
-    const success = await addPayment({
-      studentId: student._id,
-      paidAmount: Number(amount),
-      installment,
-      year,
-    });
+  const success = await addPayment({
+    studentId: student._id,
+    paidAmount: Number(amount),
+    installment,
+    year,
+  });
 
-    if (success) {
-      alert("✅ Payment added");
-      setShowAddFee(false);
-      setAmount("");
-      setInstallment("");
-      setYear(new Date().getFullYear());
-      reload(); // backend recalculation
-    }
-  };
+  if (success) {
+    alert("✅ Payment added");
+
+    setShowAddFee(false);
+    setAmount("");
+    setInstallment("");
+    setYear(new Date().getFullYear());
+
+    reload();
+  }
+};
 
   /* ---------------------------- SAVE OTHER FEES ---------------------------- */
   const handleSaveOtherFees = async () => {
@@ -134,17 +148,25 @@ const PaymentsTab = ({ student, setStudent, reload }) => {
             <thead>
               <tr>
                 <th>#</th>
+                <th>Receipt No.</th>
                 <th>Date</th>
                 <th>Installment</th>
                 <th>Amount</th>
                 <th>Receipt</th>
-                <th>Action</th>
+             {role === "admin" && <th>Action</th>}
               </tr>
             </thead>
             <tbody>
               {student.monthlyPayments.map((p, i) => (
                 <tr key={p._id}>
                   <td>{i + 1}</td>
+                  <td>
+  <strong>
+    {p.receiptNumber != null
+      ? String(p.receiptNumber).padStart(2, "0")
+      : "-"}
+  </strong>
+</td>
                   <td>{new Date(p.date).toLocaleDateString()}</td>
                   <td>{p.installment}</td>
                   <td>₹{p.paidAmount}</td>
@@ -160,15 +182,16 @@ const PaymentsTab = ({ student, setStudent, reload }) => {
                       🖨
                     </button>
                   </td>
-                  <td>
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDeletePayment(p._id)}
-                    >
-                      🗑
-                    </button>
-                  </td>
-
+          {role === "admin" && (
+  <td>
+    <button
+      className="btn-delete"
+      onClick={() => handleDeletePayment(p._id)}
+    >
+      🗑
+    </button>
+  </td>
+)}
                 </tr>
               ))}
             </tbody>
@@ -181,7 +204,9 @@ const PaymentsTab = ({ student, setStudent, reload }) => {
         <div className="summary-box">
           <div>
             <p><strong>Yearly Fee:</strong> ₹{student.yearlyFee}</p>
-            <p><strong>Previous Year Fee:</strong> ₹{student.previousYearFee}</p>
+           <p>
+  <strong>Previous Year Fee:</strong> ₹{currentPreviousYearFee}
+</p>
             <p><strong>Other Fees:</strong> ₹{student.otherFees}</p>
             <p><strong>Discount:</strong> ₹{student.discount}</p>
             <hr />
@@ -242,17 +267,17 @@ const PaymentsTab = ({ student, setStudent, reload }) => {
             </div>
           ))}
         </div>
-
-        {!editMode ? (
-          <button className="btn-primary" onClick={startEdit}>
-            ✏️ Edit
-          </button>
-
-        ) : (
-          <button className="btn-success" onClick={handleSaveOtherFees}>
-            💾 Save
-          </button>
-        )}
+{role === "admin" && (
+  !editMode ? (
+    <button className="btn-primary" onClick={startEdit}>
+      ✏️ Edit
+    </button>
+  ) : (
+    <button className="btn-success" onClick={handleSaveOtherFees}>
+      💾 Save
+    </button>
+  )
+)}
       </div>
 
       {/* ================= ADD PAYMENT MODAL ================= */}

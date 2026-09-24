@@ -69,6 +69,30 @@ export const saveOtherFees = async (id, fees) => {
   }
 };
 
+export const previewTC = async (studentId) => {
+  try {
+    const res = await api.get(`/students/tc/preview/${studentId}`);
+
+    if (res.data?.success) {
+      return res.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(
+      "Preview TC error:",
+      error.response?.data || error.message
+    );
+
+    alert(
+      error.response?.data?.message ||
+      "Failed to load TC preview"
+    );
+
+    return null;
+  }
+};
+
 // 🔹 Approve TC (UPDATED)
 export const approveTC = async (id, payload) => {
   try {

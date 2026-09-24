@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+
 import {
   fetchStudent,
   saveStudentProfile,
   deletePayment,
 } from "../../../services/studentService.js";
+
 import ProfileTab from "./Tabs/ProfileTab";
 import PaymentsTab from "./Tabs/PaymentsTab";
+import SessionTab from "./Tabs/SessionTab";
 import TcTab from "./Tabs/TcTab";
+
 import "./StudentProfile.css";
 
 const StudentProfile = () => {
   const { id } = useParams();
   const location = useLocation();
-const navigate = useNavigate();
-const role = localStorage.getItem("role");
+  const navigate = useNavigate();
+  const role = localStorage.getItem("role");
+
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("profile");
   const [editMode, setEditMode] = useState(false);
 
-
   // 🔹 Load student data
   const loadData = async () => {
     setLoading(true);
+
     const s = await fetchStudent(id);
+
     setStudent(s);
     setLoading(false);
   };
@@ -38,6 +43,7 @@ const role = localStorage.getItem("role");
     if (!id) return alert("⚠️ Student ID missing");
 
     const updated = await saveStudentProfile(id, studentData);
+
     if (updated) {
       alert("✅ Student updated successfully");
       loadData();
@@ -46,32 +52,32 @@ const role = localStorage.getItem("role");
     }
   };
 
-
   if (loading) return <p>Loading...</p>;
   if (!student) return <p>No student found ❌</p>;
 
-  const tabs = ["profile", "payments", "tc"];
+  const tabs = ["profile", "payments", "session", "tc"];
 
   return (
     <div className="profile-container">
 
- <button
-  className="back-btn"
-  onClick={() => {
-   navigate(
-  role === "admin"
-    ? "/admin/students"
-    : "/account/students",
-  {
-    state: location.state
-  }
-);
-  }}
->
-  ⬅ Back
-</button>
- 
+      {/* 🔙 Back */}
+      <button
+        className="back-btn"
+        onClick={() => {
+          navigate(
+            role === "admin"
+              ? "/admin/students"
+              : "/account/students",
+            {
+              state: location.state,
+            }
+          );
+        }}
+      >
+        ⬅ Back
+      </button>
 
+      {/* 🔹 Tabs */}
       <div className="tabs top-tabs">
         {tabs.map((t) => (
           <button
@@ -83,12 +89,14 @@ const role = localStorage.getItem("role");
               ? "Profile"
               : t === "payments"
               ? "Payments"
+              : t === "session"
+              ? "Session"
               : "TC Generate"}
           </button>
         ))}
       </div>
 
-      {/* 🔹 Tabs Rendering */}
+      {/* 🔹 Profile */}
       {tab === "profile" && (
         <ProfileTab
           student={student}
@@ -100,18 +108,35 @@ const role = localStorage.getItem("role");
         />
       )}
 
+      {/* 🔹 Payments */}
       {tab === "payments" && (
         <PaymentsTab
           student={student}
           deletePayment={deletePayment}
           reload={loadData}
+          role={role}
         />
       )}
 
-      {tab === "tc" && (
-        <TcTab student={student} studentId={id} reload={loadData} />
+      {/* 🔹 NEW SESSION TAB */}
+      {tab === "session" && (
+        <SessionTab
+          student={student}
+          studentId={id}
+          reload={loadData}
+          role={role}
+        />
       )}
-   
+
+      {/* 🔹 TC */}
+      {tab === "tc" && (
+        <TcTab
+          student={student}
+          studentId={id}
+          reload={loadData}
+        />
+      )}
+
     </div>
   );
 };

@@ -1,5 +1,5 @@
 const BASE_URL =  "https://school-erp-backend-dvh0.onrender.com";
-// const BASE_URL =  "http://10.138.250.238:5000";
+// const BASE_URL =  "http://10.108.133.238:5000";
 
 // Saare endpoints ek object me
 export const API_URLS = {
@@ -22,6 +22,9 @@ EVENT: `${BASE_URL}/api/event`,
 SCHOOL: `${BASE_URL}/api/school`,
 SECURE: `${BASE_URL}/api/secure`,
 REPORT: `${BASE_URL}/api/report/student-risk-report`,
+  ACADEMIC_SESSION: `${BASE_URL}/api/academic-sessions`,
+  STUDENT_SESSION_FEE:
+  `${BASE_URL}/api/students`,
 };
 
 export default API_URLS;

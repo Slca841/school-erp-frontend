@@ -89,13 +89,34 @@ doc.line(10, 40, 195, 40);
   doc.setFontSize(11);
   doc.setFont(undefined, "normal");
 
-  let y = 70;
+let y = 70;
 let x = 150;
 let l = 60;
 
-  // doc.text(`TC Number : ${student.tcNumber}`, 20, l);
-  doc.text(`Date : ${new Date().toLocaleDateString()}`, x, l);
+// ================= TC NUMBER & DATE =================
 
+doc.setFontSize(11);
+doc.setFont(undefined, "bold");
+
+const formattedTCNumber =
+  student.tcNumber !== undefined &&
+  student.tcNumber !== null
+    ? String(student.tcNumber).padStart(2, "0")
+    : "N.A.";
+
+doc.text(
+  `TC No. : ${formattedTCNumber}`,
+  20,
+  l
+);
+
+doc.text(
+  `Date : ${new Date().toLocaleDateString()}`,
+  x,
+  l
+);
+
+doc.setFont(undefined, "normal");
 
 drawField(1, "This is to certify that the student :-", student.fullName, y);
 y += 10;
@@ -120,7 +141,12 @@ y += 10;
 drawField(7, "Any fee concession availed of, if so, the nature of such concession :-", "PAID", y);
 y += 10;
 
-drawField(8, "General Conduct :-", "GOOD", y);
+drawField(
+  8,
+  "General Conduct :-",
+  student.generalConduct || "GOOD",
+  y
+);
 
 y += 10;
 
@@ -534,6 +560,12 @@ export const generatePaymentReceipt = (
   payment,
   autoPrint = false
 ) => {
+  const formattedReceiptNumber =
+  payment.receiptNumber !== undefined &&
+  payment.receiptNumber !== null
+    ? String(payment.receiptNumber).padStart(2, "0")
+    : "N.A.";
+
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -610,6 +642,18 @@ doc.setTextColor(0, 0, 0);
   doc.text("FEE RECEIPT", 74, 35, {
     align: "center",
   });
+
+  doc.setFontSize(9);
+doc.setFont(undefined, "bold");
+
+doc.text(
+  `Receipt No. : ${formattedReceiptNumber}`,
+  138,
+  35,
+  { align: "right" }
+);
+
+doc.setFont(undefined, "normal");
 
   // Student Box
 doc.rect(10, 42, 128, 35);
