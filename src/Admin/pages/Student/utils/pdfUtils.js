@@ -15,8 +15,7 @@ import logo from "../../../../../public/logo.png";
   }
 };
 
-export const generateTC = (student, autoPrint = false) => {
-
+export const generateTC = (student, autoPrint = false, preview = false) => {
 getCurrentSession();
   const doc = new jsPDF();
 const drawField = (sr, label, value, y) => {
@@ -101,7 +100,7 @@ doc.setFont(undefined, "bold");
 const formattedTCNumber =
   student.tcNumber !== undefined &&
   student.tcNumber !== null
-    ? String(student.tcNumber).padStart(2, "0")
+    ? String(student.tcNumber).padStart(4, "0")
     : "N.A.";
 
 doc.text(
@@ -251,6 +250,10 @@ doc.text("Principle", 160, y + 10);
 
 
   /* ================= SAVE ================= */
+if (preview) {
+  return doc.output("bloburl");
+}
+
 if (autoPrint) {
   doc.autoPrint();
 
@@ -260,13 +263,14 @@ if (autoPrint) {
 
   if (printWindow) {
     printWindow.onload = () => {
-      printWindow.focus();
       printWindow.print();
     };
   }
-} else {
-  doc.save(`TC_${student.fullName}.pdf`);
+
+  return;
 }
+
+doc.save(`TC-${student.fullName}.pdf`);
 };
 
 
@@ -563,7 +567,7 @@ export const generatePaymentReceipt = (
   const formattedReceiptNumber =
   payment.receiptNumber !== undefined &&
   payment.receiptNumber !== null
-    ? String(payment.receiptNumber).padStart(2, "0")
+    ? String(payment.receiptNumber).padStart(4, "0")
     : "N.A.";
 
   const doc = new jsPDF({

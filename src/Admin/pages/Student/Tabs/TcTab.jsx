@@ -22,7 +22,8 @@ const [attendance, setAttendance] = useState({
 
 const [generalConduct, setGeneralConduct] =
   useState("GOOD");
-
+const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+const [pdfPreviewLoading, setPdfPreviewLoading] = useState(false);
   // 🔹 Load TC history
   const loadTCs = async () => {
     if (!studentId) return;
@@ -51,24 +52,129 @@ const handleOpenTCPreview = async () => {
   setPreviewData(data);
 
   setAttendance({
-    totalWorkingDays:
-      data.attendance?.totalWorkingDays || 0,
-
-    overallPresent:
-      data.attendance?.overallPresent || 0,
-
-    overallAbsent:
-      data.attendance?.overallAbsent || 0,
-
-    overallLeave:
-      data.attendance?.overallLeave || 0,
-
-    attendancePercentage:
-      data.attendance?.attendancePercentage || 0,
+    totalWorkingDays: data.attendance?.totalWorkingDays || 0,
+    overallPresent: data.attendance?.overallPresent || 0,
+    overallAbsent: data.attendance?.overallAbsent || 0,
+    overallLeave: data.attendance?.overallLeave || 0,
+    attendancePercentage: data.attendance?.attendancePercentage || 0,
   });
 
   setShowModal(true);
 };
+useEffect(() => {
+  if (!showModal || !previewData) return;
+
+  const studentForPDF = {
+    ...previewData.student,
+
+    tcNumber: "PREVIEW",
+
+    generalConduct,
+
+    totalWorkingDays: Number(attendance.totalWorkingDays) || 0,
+    overallPresent: Number(attendance.overallPresent) || 0,
+    overallAbsent: Number(attendance.overallAbsent) || 0,
+    overallLeave: Number(attendance.overallLeave) || 0,
+
+    attendancePercentage:
+      Number(attendance.totalWorkingDays) > 0
+        ? Number(
+            (
+              (Number(attendance.overallPresent) /
+                Number(attendance.totalWorkingDays)) *
+              100
+            ).toFixed(2)
+          )
+        : 0,
+
+    dateOfLeaving,
+    reason: reasonOfTC,
+  };
+
+  const url = generateTC(studentForPDF, false, true);
+
+  setPdfPreviewUrl(url);
+
+  // Previous Blob URL clean karo
+  return () => {
+    if (url) {
+      URL.revokeObjectURL(url);
+    }
+  };
+}, [
+  showModal,
+  previewData,
+  attendance.totalWorkingDays,
+  attendance.overallPresent,
+  attendance.overallAbsent,
+  attendance.overallLeave,
+  generalConduct,
+  dateOfLeaving,
+  reasonOfTC,
+]);
+const handleGeneratePDFPreview = async () => {
+  try {
+    if (!previewData) return;
+
+    setPdfPreviewLoading(true);
+
+    const studentForPDF = {
+      ...previewData.student,
+
+      // Preview mein actual TC number nahi banega
+      tcNumber: "PREVIEW",
+
+      // Edited values
+      generalConduct,
+
+      totalWorkingDays: Number(
+        attendance.totalWorkingDays
+      ),
+
+      overallPresent: Number(
+        attendance.overallPresent
+      ),
+
+      overallAbsent: Number(
+        attendance.overallAbsent
+      ),
+
+      overallLeave: Number(
+        attendance.overallLeave
+      ),
+
+      attendancePercentage:
+        attendance.totalWorkingDays > 0
+          ? Number(
+              (
+                (Number(attendance.overallPresent) /
+                  Number(attendance.totalWorkingDays)) *
+                100
+              ).toFixed(2)
+            )
+          : 0,
+
+      dateOfLeaving,
+      reason: reasonOfTC,
+    };
+
+    const url = generateTC(
+      studentForPDF,
+      false,
+      true
+    );
+
+    setPdfPreviewUrl(url);
+  } catch (error) {
+    console.error(
+      "TC PDF PREVIEW ERROR:",
+      error
+    );
+  } finally {
+    setPdfPreviewLoading(false);
+  }
+};
+
   // 🔹 Final approve
  const handleConfirmApprove = async () => {
   if (!dateOfLeaving || !reasonOfTC) {
@@ -159,15 +265,18 @@ const handleOpenTCPreview = async () => {
       <h2 className="section-title">Transfer Certificate</h2>
 
       {/* ✅ Generate Button */}
+{/* ================= GENERATE TC BUTTON ================= */}
+
 {hasTC ? (
   <button
-    className="btn btn-save"
+    type="button"
+    className="btn btn-save tc-main-generate-btn"
     onClick={() =>
       generateTC(
         {
           ...student,
           ...latestTC,
-             tcNumber: formatTCNumber(latestTC.tcNumber),
+          tcNumber: formatTCNumber(latestTC.tcNumber),
         },
         true
       )
@@ -176,12 +285,14 @@ const handleOpenTCPreview = async () => {
     🖨️ Print TC
   </button>
 ) : (
-<button
-  className="btn btn-save"
-  onClick={handleOpenTCPreview}
->
-  📜 Generate TC
-</button>
+  <button
+    type="button"
+    className="btn tc-main-generate-btn"
+    onClick={handleOpenTCPreview}
+    disabled={previewLoading}
+  >
+    {previewLoading ? "Loading TC..." : "📜 Generate TC"}
+  </button>
 )}
 
       {/* ================= MODAL ================= */}
@@ -396,216 +507,175 @@ const handleOpenTCPreview = async () => {
 
         {/* ================= RIGHT PREVIEW ================= */}
 
+       {/* ================= RIGHT PREVIEW ================= */}
+
+<div className="tc-right-preview">
+
+  <div className="tc-preview-title">
+    <h4>👁️ TC Preview</h4>
+  </div>
+
+  {/* HTML PREVIEW */}
+  {!pdfPreviewUrl && (
+    <div className="tc-html-preview-box">
+
+      <div className="tc-school-header">
+        <h2>ST. LAXMAN CHAITANYA ACADEMY</h2>
+
+        <p>
+          Harsud Road, Nehalda, Khandwa (M.P.)
+        </p>
+
+        <hr />
+
+        <h1>TRANSFER CERTIFICATE</h1>
+      </div>
+
+      <div className="tc-number-row">
+        <span>TC No. : -</span>
+
+        <span>
+          Date : {new Date().toLocaleDateString()}
+        </span>
+      </div>
+
+      <div className="tc-details">
+
+        <p>
+          <b>1. This is to certify that the student :-</b>{" "}
+          {previewData?.student?.fullName}
+        </p>
+
+        <p>
+          <b>2. Mother's Name :-</b>{" "}
+          {previewData?.student?.studentMotherName || "N.A."}
+        </p>
+
+        <p>
+          <b>3. Father's Name :-</b>{" "}
+          {previewData?.student?.studentFatherName || "N.A."}
+        </p>
+
+        <p>
+          <b>4. Category :-</b>{" "}
+          {previewData?.student?.category || "N.A."}
+        </p>
+
+        <p>
+          <b>5. Class :-</b>{" "}
+          {previewData?.student?.studentclass || "N.A."}
+        </p>
+
+        <p>
+          <b>8. General Conduct :-</b>{" "}
+          {generalConduct}
+        </p>
+
+        <p>
+          <b>9. Total Working Days :-</b>{" "}
+          {attendance.totalWorkingDays}
+        </p>
+
+        <p>
+          <b>10. Total Present Days :-</b>{" "}
+          {attendance.overallPresent}
+        </p>
+
+        <p>
+          <b>11. Total Absent Days :-</b>{" "}
+          {attendance.overallAbsent}
+        </p>
+
+        <p>
+          <b>12. Attendance :-</b>{" "}
+          {attendance.totalWorkingDays > 0
+            ? (
+                (Number(attendance.overallPresent) /
+                  Number(attendance.totalWorkingDays)) *
+                100
+              ).toFixed(2)
+            : 0}
+          %
+        </p>
+
+        <p>
+          <b>Date of Admission :-</b>{" "}
+          {previewData?.student?.dateOfAdmission
+            ? new Date(
+                previewData.student.dateOfAdmission
+              ).toLocaleDateString()
+            : "N.A."}
+        </p>
+
+        <p>
+          <b>Date of Leaving :-</b>{" "}
+          {dateOfLeaving
+            ? new Date(dateOfLeaving).toLocaleDateString()
+            : "N.A."}
+        </p>
+
+        <p>
+          <b>Reason for Leaving :-</b>{" "}
+          {reasonOfTC || "On Request"}
+        </p>
+
+      </div>
+    </div>
+  )}
+
+  {/* ACTUAL PDF */}
+  {pdfPreviewUrl && (
+    <div className="tc-pdf-viewer">
+
+      <div className="tc-pdf-viewer-header">
         <div>
-          <h4>👁️ TC Preview</h4>
-
-          <div
-            style={{
-              border: "1px solid #ddd",
-              background: "#fff",
-              padding: "30px",
-              minHeight: "600px",
-              boxShadow:
-                "0 4px 15px rgba(0,0,0,0.1)",
-            }}
-          >
-
-            <div
-              style={{
-                textAlign: "center",
-              }}
-            >
-              <h2>
-                ST. LAXMAN CHAITANYA ACADEMY
-              </h2>
-
-              <p>
-                Harsud Road, Nehalda,
-                Khandwa (M.P.)
-              </p>
-
-              <hr />
-
-              <h1>
-                TRANSFER CERTIFICATE
-              </h1>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent:
-                  "space-between",
-                fontWeight: "bold",
-              }}
-            >
-              <span>
-                TC No. : -
-              </span>
-
-              <span>
-                Date :{" "}
-                {new Date().toLocaleDateString()}
-              </span>
-            </div>
-
-            <div
-              style={{
-                marginTop: "30px",
-                lineHeight: "2",
-              }}
-            >
-              <p>
-                <b>
-                  1. This is to certify that
-                  the student :-
-                </b>{" "}
-                {previewData?.student?.fullName}
-              </p>
-
-              <p>
-                <b>2. Mother's Name :-</b>{" "}
-                {previewData?.student
-                  ?.studentMotherName ||
-                  "N.A."}
-              </p>
-
-              <p>
-                <b>3. Father's Name :-</b>{" "}
-                {previewData?.student
-                  ?.studentFatherName ||
-                  "N.A."}
-              </p>
-
-              <p>
-                <b>
-                  4. Category :-
-                </b>{" "}
-                {previewData?.student
-                  ?.category ||
-                  "N.A."}
-              </p>
-
-              <p>
-                <b>
-                  5. Class :-
-                </b>{" "}
-                {previewData?.student
-                  ?.studentclass ||
-                  "N.A."}
-              </p>
-
-              <p>
-                <b>
-                  8. General Conduct :-
-                </b>{" "}
-                {generalConduct}
-              </p>
-
-              <p>
-                <b>
-                  9. Total Working Days :-
-                </b>{" "}
-                {attendance.totalWorkingDays}
-              </p>
-
-              <p>
-                <b>
-                  10. Total Present Days :-
-                </b>{" "}
-                {attendance.overallPresent}
-              </p>
-
-              <p>
-                <b>
-                  11. Total Absent Days :-
-                </b>{" "}
-                {attendance.overallAbsent}
-              </p>
-
-              <p>
-                <b>
-                  12. Attendance :-
-                </b>{" "}
-                {attendance.totalWorkingDays > 0
-                  ? (
-                      (
-                        Number(
-                          attendance.overallPresent
-                        ) /
-                        Number(
-                          attendance.totalWorkingDays
-                        )
-                      ) * 100
-                    ).toFixed(2)
-                  : 0}
-                %
-              </p>
-
-              <p>
-                <b>
-                  Date of Admission :-
-                </b>{" "}
-                {previewData?.student
-                  ?.dateOfAdmission
-                  ? new Date(
-                      previewData.student.dateOfAdmission
-                    ).toLocaleDateString()
-                  : "N.A."}
-              </p>
-
-              <p>
-                <b>
-                  Date of Leaving :-
-                </b>{" "}
-                {dateOfLeaving
-                  ? new Date(
-                      dateOfLeaving
-                    ).toLocaleDateString()
-                  : "N.A."}
-              </p>
-
-              <p>
-                <b>
-                  Reason for Leaving :-
-                </b>{" "}
-                {reasonOfTC ||
-                  "On Request"}
-              </p>
-            </div>
-          </div>
+          <strong>📄 Final TC PDF</strong>
+          <span>Preview</span>
         </div>
       </div>
 
-      {/* ================= BUTTONS ================= */}
+<iframe
+  src={`${pdfPreviewUrl}#zoom=page-width`}
+  title="Live TC Preview"
+  className="tc-pdf-preview-frame"
+/>
 
-      <div
-        className="modal-actions"
-        style={{
-          marginTop: "20px",
-        }}
-      >
-        <button
-          className="btn btn-cancel"
-          onClick={() =>
-            setShowModal(false)
-          }
-        >
-          Cancel
-        </button>
+    </div>
+  )}
 
-        <button
-          className="btn btn-save"
-          onClick={
-            handleConfirmApprove
-          }
-        >
-          ✅ Approve & Generate TC
-        </button>
+</div>
       </div>
+
+      {/* ================= BUTTONS ================= */}
+<div
+  className="modal-actions"
+  style={{
+    marginTop: "20px",
+    display: "flex",
+    gap: "10px",
+  }}
+>
+  <button
+    className="btn btn-cancel"
+    onClick={() => {
+      setShowModal(false);
+      setPdfPreviewUrl(null);
+    }}
+  >
+    Cancel
+  </button>
+
+  <button
+    className="btn btn-save"
+    onClick={handleConfirmApprove}
+  >
+    ✅ Approve & Generate TC
+  </button>
+</div>
     </div>
   </div>
 )}
+
 
       {/* ================= TC HISTORY ================= */}
       <h3 className="section-title mt-6">TC History (This Student)</h3>

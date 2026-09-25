@@ -71,7 +71,9 @@ export const saveOtherFees = async (id, fees) => {
 
 export const previewTC = async (studentId) => {
   try {
-    const res = await api.get(`/students/tc/preview/${studentId}`);
+    const res = await axios.get(
+      `${API_URLS.GET_STUDENTS}/preview/${studentId}`
+    );
 
     if (res.data?.success) {
       return res.data;
