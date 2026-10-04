@@ -16,8 +16,8 @@ import logo from "../../../../../public/logo.png";
 };
 
 export const generateTC = (student, autoPrint = false, preview = false) => {
-getCurrentSession();
-  const doc = new jsPDF();
+const currentSession = getCurrentSession();
+const doc = new jsPDF();
 const drawField = (sr, label, value, y) => {
   const question = `${sr}. ${label}`;
   const text = String(value || "N.A.");
@@ -108,7 +108,14 @@ doc.text(
   20,
   l
 );
+doc.setFontSize(11);
+doc.setFont(undefined, "bold");
 
+doc.text(
+  `Session : ${currentSession}`,
+  20,
+  65
+);
 doc.text(
   `Date : ${new Date().toLocaleDateString()}`,
   x,
@@ -274,7 +281,11 @@ doc.save(`TC-${student.fullName}.pdf`);
 };
 
 
-export const generateReceipt = (student, autoPrint = false) => {
+export const generateReceipt = (
+  student,
+  selectedSessionFee,
+  autoPrint = false
+) => {
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -331,14 +342,17 @@ img.src = logo;
     }
   );
 
-  doc.text(
-    `Session : ${getCurrentSession()}`,
-    74,
-    27,
-    {
-      align: "center",
-    }
-  );
+const sessionName =
+  selectedSessionFee?.sessionName || "-";
+
+doc.text(
+  `Session : ${sessionName}`,
+  74,
+  27,
+  {
+    align: "center",
+  }
+);
 
   doc.setFont(undefined, "bold");
 
@@ -396,22 +410,37 @@ img.src = logo;
     77,
     66
   );
+const selectedSessionId =
+  selectedSessionFee?.sessionId?._id ||
+  selectedSessionFee?.sessionId;
 
+const sessionPayments =
+  student?.monthlyPayments?.filter((p) => {
+    const paymentSessionId =
+      p.sessionId?._id ||
+      p.sessionId;
+
+    return (
+      paymentSessionId?.toString() ===
+      selectedSessionId?.toString()
+    );
+  }) || [];
   // ================= TABLE DATA =================
-  const tableData =
-    student.monthlyPayments?.map((p, i) => [
-      i + 1,
-      p.installment || "Fee Payment",
-      `${Number(
-        p.paidAmount
-      ).toLocaleString("en-IN")}`,
-    ]) || [];
+const tableData =
+  sessionPayments.map((p, i) => [
+    i + 1,
+    p.installment || "Fee Payment",
+    `${Number(
+      p.paidAmount || 0
+    ).toLocaleString("en-IN")}`,
+  ]);
 
-  const totalSubmitted =
-    student.monthlyPayments?.reduce(
-      (sum, p) => sum + p.paidAmount,
-      0
-    ) || 0;
+const totalSubmitted =
+  sessionPayments.reduce(
+    (sum, p) =>
+      sum + Number(p.paidAmount || 0),
+    0
+  );
 
   // ================= PAYMENT TABLE =================
   autoTable(doc, {
@@ -522,13 +551,12 @@ img.src = logo;
     12
   );
   // ================= FEES PAID FOR =================
-  const paidFor =
-    student.monthlyPayments
-      ?.map(
-        (p) => p.installment
-      )
-      .join(", ") || "-";
-
+const paidFor =
+  sessionPayments
+    .map((p) => p.installment)
+    .filter(Boolean)
+    .join(", ") || "-";
+    
   doc.text(
     `Fees Paid For : ${paidFor}`,
     13,
@@ -600,15 +628,23 @@ doc.text(
 
 // Text color wapas black
 doc.setTextColor(0, 0, 0);
-  const getCurrentSession = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
+// ================= PAYMENT SESSION =================
+const paymentSessionId =
+  payment.sessionId?._id ||
+  payment.sessionId;
 
-    return month >= 3
-      ? `${year}-${year + 1}`
-      : `${year - 1}-${year}`;
-  };
+const sessionFee =
+  student?.fees?.sessionWiseFees?.find(
+    (fee) =>
+      fee.sessionId?.toString() ===
+      paymentSessionId?.toString()
+  );
+
+const sessionName =
+  sessionFee?.sessionName ||
+  payment.sessionId?.name ||
+  payment.sessionName ||
+  "-";
 
   // Header
   doc.setFontSize(13);
@@ -633,14 +669,14 @@ doc.setTextColor(0, 0, 0);
     }
   );
 
-  doc.text(
-    `Session : ${getCurrentSession()}`,
-    74,
-    27,
-    {
-      align: "center",
-    }
-  );
+doc.text(
+  `Session : ${sessionName}`,
+  74,
+  27,
+  {
+    align: "center",
+  }
+);
 
   doc.setFont(undefined, "bold");
   doc.text("FEE RECEIPT", 74, 35, {
@@ -800,12 +836,8 @@ doc.text(
     128,
     12
   );
- const paidFor =
-    student.monthlyPayments
-      ?.map(
-        (p) => p.installment
-      )
-      .join(", ") || "-";
+const paidFor =
+  payment.installment || "Fee Payment";
 
   doc.text(
     `Fees Paid For : ${paidFor}`,

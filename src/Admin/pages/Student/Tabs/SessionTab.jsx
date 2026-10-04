@@ -77,15 +77,25 @@ const [isSelectedSessionCurrent, setIsSelectedSessionCurrent] = useState(false);
   // SESSION SNAPSHOT
   // =====================================================
 
-  const getSessionSnapshot = (sessionId) => {
-    return (
-      student?.fees?.sessionWiseFees?.find(
-        (item) =>
-          item.sessionId?.toString() ===
-          sessionId?.toString()
-      ) || null
-    );
-  };
+const getId = (value) => {
+  if (!value) return "";
+
+  if (typeof value === "object") {
+    return value._id?.toString() || "";
+  }
+
+  return value.toString();
+};
+
+const getSessionSnapshot = (sessionId) => {
+  return (
+    student?.fees?.sessionWiseFees?.find(
+      (item) =>
+        getId(item.sessionId) ===
+        getId(sessionId)
+    ) || null
+  );
+};
 
   // =====================================================
   // PREVIOUS SESSION
@@ -515,7 +525,21 @@ const handleSessionChange = (sessionId) => {
                       getOtherFeesFromSnapshot(
                         snapshot
                       );
+const tablePreviousYearFee =
+  getPreviousYearFee(session._id);
 
+const tableTotalFee =
+  Number(snapshot.yearlyFee || 0) +
+  tablePreviousYearFee +
+  otherFees -
+  Number(snapshot.discount || 0);
+
+const tableRemaining =
+  Math.max(
+    tableTotalFee -
+      Number(snapshot.paidAmount || 0),
+    0
+  );
                     return (
                       <tr
                         key={session._id}
@@ -540,9 +564,7 @@ const handleSessionChange = (sessionId) => {
                         </td>
 
                         <td>
-                          {money(
-                            snapshot.previousYearFee
-                          )}
+                  {money(tablePreviousYearFee)}
                         </td>
 
                         <td>
@@ -565,9 +587,7 @@ const handleSessionChange = (sessionId) => {
 
                         <td>
                           <strong>
-                            {money(
-                              snapshot.totalFee
-                            )}
+                   {money(tableTotalFee)}
                           </strong>
                         </td>
 
@@ -579,9 +599,7 @@ const handleSessionChange = (sessionId) => {
 
                         <td>
                           <strong>
-                            {money(
-                              snapshot.remainingAmount
-                            )}
+                     {money(tableRemaining)}
                           </strong>
                         </td>
                       </tr>

@@ -31,10 +31,27 @@ export const saveStudentProfile = async (id, studentData) => {
 // 🔹 Add Payment
 export const addPayment = async (paymentData) => {
   try {
-    const res = await axios.post(`${API_URLS.PAYMENT}/add`, paymentData);
+    console.log("💰 ADD PAYMENT PAYLOAD:", paymentData);
+
+    const res = await axios.post(
+      `${API_URLS.PAYMENT}/add`,
+      paymentData
+    );
+
+    console.log("✅ ADD PAYMENT RESPONSE:", res.data);
+
     return res.data.success;
   } catch (err) {
-    console.error("Error adding payment", err);
+    console.error(
+      "❌ Error adding payment:",
+      err.response?.data || err.message
+    );
+
+    alert(
+      err.response?.data?.message ||
+      "Failed to add payment"
+    );
+
     return false;
   }
 };
