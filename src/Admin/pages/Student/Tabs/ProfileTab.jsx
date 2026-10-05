@@ -69,9 +69,7 @@ const [homeworkSummary, setHomeworkSummary] = useState(null);
     { label: "Guardian Email", key: "guardian.email" },
     { label: "Guardian Address", key: "guardian.address" },
     { label: "Address", key: "address" },
-    { label: "Yearly Fee", key: "yearlyFee" },
-    { label: "Discount", key: "discount" },
-    { label: "Remaining Fee", key: "remainingFee" }
+
   ];
 
   /* ================= EFFECTS ================= */
